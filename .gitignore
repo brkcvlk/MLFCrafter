@@ -138,6 +138,29 @@ test_data/
 models/
 temp/
 
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# Coverage and testing
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Development tools
+.pre-commit-config.yaml
+
 # IDE
 .vscode/
 .idea/
