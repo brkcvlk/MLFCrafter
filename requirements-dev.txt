@@ -1,0 +1,10 @@
+# Development and testing dependencies
+-r requirements.txt  # Include production dependencies
+
+# Testing
+pytest>=8.0.0
+pytest-cov>=4.0.0  # Coverage reporting
+pytest-xdist>=3.0.0  # Parallel testing
+
+# Code quality
+ruff>=0.12.0

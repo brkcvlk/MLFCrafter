@@ -28,22 +28,55 @@ pip install flowcraft
 ```bash
 git clone https://github.com/brkcvlk/flowcraft.git
 cd flowcraft
+pip install -r requirements.txt
 pip install .
 ```
 
 ### Development Installation
 
+For development work, you have two options:
+
+#### Option 1: Using requirements-dev.txt (Recommended)
 ```bash
 git clone https://github.com/brkcvlk/flowcraft.git
 cd flowcraft
-pip install -e ".[test]"
+pip install -r requirements-dev.txt
 ```
 
-### With Tests
+#### Option 2: Using pyproject.toml optional dependencies
+```bash
+git clone https://github.com/brkcvlk/flowcraft.git
+cd flowcraft
+pip install -e ".[dev]"
+```
+
+### Dependency Groups
+
+- **Production**: `pip install -r requirements.txt`
+- **Development**: `pip install -r requirements-dev.txt` or `pip install -e ".[dev]"`  
+- **Testing Only**: `pip install -e ".[test]"`
+- **Documentation**: `pip install -e ".[docs]"`
+
+### Development Commands
 
 ```bash
-# For running tests
-pip install "flowcraft[test]"
+# Run tests
+python -m pytest tests/ -v
+
+# Run tests with coverage  
+python -m pytest tests/ -v --cov=flowcraft --cov-report=html
+
+# Check code quality
+ruff check .
+
+# Auto-fix code issues
+ruff check --fix --unsafe-fixes .
+
+# Format code
+ruff format .
+
+# Run example
+python example.py
 ```
 
 ## Quick Start
