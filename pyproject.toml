@@ -51,14 +51,70 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.0.0",
+    "ruff>=0.12.0",
+]
 test = [
-    "pytest>=7.0.0"
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/brkcvlk/flowcraft"
 Repository = "https://github.com/brkcvlk/flowcraft"
 "Bug Tracker" = "https://github.com/brkcvlk/flowcraft/issues"
+
+[tool.ruff]
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+# Assume Python 3.8+
+target-version = "py38"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`) codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = ["E4", "E7", "E9", "F", "I", "UP", "N", "B", "A", "C4", "T20", "PT"]
+ignore = ["N806"]  # Allow ML convention variable names like X, y
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+# Import organization
+force-single-line = false
+force-sort-within-sections = true
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use assert statements and relative imports
+"tests/*.py" = ["B011", "F401", "F811"]
+"example.py" = ["T20"]  # Allow print statements in examples
 
 
 
