@@ -1,0 +1,45 @@
+/* Custom styles for FlowCraft documentation */
+
+/* Code highlighting improvements */
+.highlight .hll { background-color: #ffffcc }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+
+/* Admonition styling */
+.admonition {
+    border-left: 4px solid #448aff;
+    margin: 1em 0;
+}
+
+/* Navigation improvements */
+.md-nav__item--active > .md-nav__link {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+/* Code block improvements */
+.highlight pre {
+    border-radius: 4px;
+    padding: 1em;
+}
+
+/* Table styling */
+table {
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+} 
+
+ 

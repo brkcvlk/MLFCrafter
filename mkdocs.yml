@@ -1,0 +1,110 @@
+site_name: FlowCraft Documentation
+site_description: ML Pipeline Automation Made Simple - Complete documentation for FlowCraft framework
+site_author: Burak Civelek
+site_url: https://brkcvlk.github.io/flowcraft
+
+# Repository
+repo_name: brkcvlk/flowcraft
+repo_url: https://github.com/brkcvlk/flowcraft
+
+# Theme
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: orange
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+
+# Extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+  - toc:
+      permalink: true
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - gen-files:
+      scripts:
+      - docs/gen_ref_pages.py
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Your First Pipeline: getting-started/first-pipeline.md
+  - User Guide:
+    - Pipeline Basics: user-guide/pipeline-basics.md
+    - Data Processing: user-guide/data-processing.md
+    - Model Training: user-guide/model-training.md
+    - Model Deployment: user-guide/deployment.md
+    - Logging & Debugging: user-guide/logging.md
+  - API Reference:
+    - FlowChain: api/flowchain.md
+    - Crafters:
+      - DataIngestCrafter: api/crafters/data-ingest-crafter.md
+      - CleanerCrafter: api/crafters/cleaner-crafter.md
+      - ScalerCrafter: api/crafters/scaler-crafter.md
+      - ModelCrafter: api/crafters/model-crafter.md
+      - ScorerCrafter: api/crafters/scorer-crafter.md
+      - DeployCrafter: api/crafters/deploy-crafter.md
+    - Utilities: api/utilities.md
+  - Examples:
+    - Basic Usage: examples/basic-usage.md
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/brkcvlk/flowcraft
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/flowcraft/
+  version:
+    provider: mike
+
+extra_css:
+  - stylesheets/extra.css
