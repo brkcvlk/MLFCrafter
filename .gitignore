@@ -160,6 +160,7 @@ dmypy.json
 
 # Development tools
 .pre-commit-config.yaml
+.ruff_cache/
 
 # IDE
 .vscode/
