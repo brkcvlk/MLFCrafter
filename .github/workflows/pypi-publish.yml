@@ -37,10 +37,37 @@ jobs:
       run: twine check dist/*
       
     - name: 🚀 Publish to PyPI
+      if: ${{ secrets.PYPI_API_TOKEN }}
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
+      run: |
+        echo "✅ PYPI_API_TOKEN found - Publishing to production PyPI"
+        twine upload dist/*
+        echo "🎉 Successfully published to PyPI!"
+      
+    - name: 🧪 Publish to TestPyPI (fallback)
+      if: ${{ !secrets.PYPI_API_TOKEN }}
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+      run: |
+        echo "⚠️ PYPI_API_TOKEN not found - Attempting TestPyPI..."
+        if [ -n "$TWINE_PASSWORD" ]; then
+          twine upload dist/*
+          echo "✅ Published to TestPyPI: https://test.pypi.org/project/mlfcrafter/"
+          echo "🔧 Add PYPI_API_TOKEN secret to publish to production PyPI"
+        else
+          echo "❌ Neither PYPI_API_TOKEN nor TEST_PYPI_API_TOKEN found"
+          echo "📝 Package built successfully but not published"
+          echo "🔧 Add PyPI API token to Repository Secrets to enable publishing"
+          echo ""
+          echo "To add PyPI token:"
+          echo "1. Go to https://pypi.org/manage/account/token/"
+          echo "2. Create token for mlfcrafter"
+          echo "3. Add as PYPI_API_TOKEN in GitHub Repository Secrets"
+        fi
       
     - name: 📋 Upload build artifacts
       uses: actions/upload-artifact@v4

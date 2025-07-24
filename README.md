@@ -204,7 +204,7 @@ python example.py
 
 ## Documentation
 
-Complete documentation is available at [mlfcrafter documentation](https://brkcvlk.github.io/mlfcrafter/)
+Complete documentation is available at [MLFCrafter Docs](https://brkcvlk.github.io/mlfcrafter/)
 
 ## Contributing
 
@@ -216,7 +216,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📖 **Documentation**: [brkcvlk.github.io/mlfcrafter](https://brkcvlk.github.io/mlfcrafter/)
+- 📖 **Documentation**: [MLFCrafter Docs](https://brkcvlk.github.io/mlfcrafter/)
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/brkcvlk/mlfcrafter/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/brkcvlk/mlfcrafter/discussions)
 
