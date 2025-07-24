@@ -7,7 +7,6 @@ on:
 # Required permissions for release updates
 permissions:
   contents: write
-  metadata: read
 
 jobs:
   generate-release-notes:

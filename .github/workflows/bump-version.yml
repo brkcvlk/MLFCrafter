@@ -13,10 +13,9 @@ on:
           - minor
           - major
 
-# Required permissions for tagging
+# Required permissions for tagging and release creation
 permissions:
   contents: write
-  metadata: read
 
 jobs:
   bump-version:
