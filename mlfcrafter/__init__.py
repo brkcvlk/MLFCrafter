@@ -6,16 +6,16 @@ from .crafters import (
     ScalerCrafter,
     ScorerCrafter,
 )
-from .flow_chain import FlowChain
+from .flow_chain import MLFChain
 from .utils import setup_logger
 
 __version__ = "0.1.0"
 
-# Setup default logger when FlowCraft is imported
+# Setup default logger when MLFCrafter is imported
 _default_logger = setup_logger()
 
 __all__ = [
-    "FlowChain",
+    "MLFChain",
     "DataIngestCrafter",
     "CleanerCrafter",
     "ScalerCrafter",

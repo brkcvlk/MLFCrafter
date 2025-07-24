@@ -1,6 +1,6 @@
 # Basic Usage Examples
 
-Learn FlowCraft through practical examples that demonstrate core functionality and common use cases.
+Learn MLFCrafter through practical examples that demonstrate core functionality and common use cases.
 
 ## Simple Classification Pipeline
 
@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import tempfile
 from sklearn.datasets import make_classification
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter
 
 # Generate sample classification data
 X, y = make_classification(n_samples=1000, n_features=5, n_classes=2, random_state=42)
@@ -24,7 +24,7 @@ data.to_csv(temp_file.name, index=False)
 temp_file.close()
 
 # Create and run pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='drop'),
     ScalerCrafter(scaler_type='standard'),
@@ -43,10 +43,10 @@ print(f"F1 Score: {results['scores']['f1']:.4f}")
 
 ## Working with Different File Formats
 
-FlowCraft supports CSV, Excel, and JSON files:
+MLFCrafter supports CSV, Excel, and JSON files:
 
 ```python
-from flowcraft import DataIngestCrafter
+from mlfcrafter import DataIngestCrafter
 
 # CSV files (auto-detected)
 csv_ingester = DataIngestCrafter(data_path='data.csv', source_type='auto')
@@ -76,7 +76,7 @@ data_with_missing.to_csv(temp_file.name, index=False)
 temp_file.close()
 
 # Strategy 1: Drop rows with missing values
-pipeline_drop = FlowChain(
+pipeline_drop = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='drop')
 )
@@ -84,21 +84,21 @@ results_drop = pipeline_drop.run(target_column='target')
 print(f"After dropping: {results_drop['data'].shape}")
 
 # Strategy 2: Fill with mean for numerical columns
-pipeline_mean = FlowChain(
+pipeline_mean = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='mean')
 )
 results_mean = pipeline_mean.run(target_column='target')
 
 # Strategy 3: Fill with median
-pipeline_median = FlowChain(
+pipeline_median = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='median')
 )
 results_median = pipeline_median.run(target_column='target')
 
 # Strategy 4: Fill with constant values
-pipeline_constant = FlowChain(
+pipeline_constant = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='constant', int_fill=-999, str_fill='MISSING')
 )
@@ -122,28 +122,28 @@ sample_data.to_csv(temp_file.name, index=False)
 temp_file.close()
 
 # MinMax scaling (scales to 0-1 range)
-pipeline_minmax = FlowChain(
+pipeline_minmax = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     ScalerCrafter(scaler_type='minmax')
 )
 results_minmax = pipeline_minmax.run(target_column='target')
 
 # Standard scaling (mean=0, std=1) 
-pipeline_standard = FlowChain(
+pipeline_standard = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     ScalerCrafter(scaler_type='standard')
 )
 results_standard = pipeline_standard.run(target_column='target')
 
 # Robust scaling (uses median and IQR, good for outliers)
-pipeline_robust = FlowChain(
+pipeline_robust = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     ScalerCrafter(scaler_type='robust')
 )
 results_robust = pipeline_robust.run(target_column='target')
 
 # Scale only specific columns
-pipeline_selective = FlowChain(
+pipeline_selective = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     ScalerCrafter(scaler_type='standard', columns=['large_values'])
 )
@@ -155,12 +155,12 @@ results_selective = pipeline_selective.run(target_column='target')
 Compare different algorithms on the same dataset:
 
 ```python
-# Algorithms available in FlowCraft
+# Algorithms available in MLFCrafter
 algorithms = ['random_forest', 'logistic_regression', 'xgboost']
 results = {}
 
 for algorithm in algorithms:
-    pipeline = FlowChain(
+    pipeline = MLFChain(
         DataIngestCrafter(data_path=temp_file.name),
         CleanerCrafter(strategy='drop'),
         ScalerCrafter(scaler_type='standard'),
@@ -187,7 +187,7 @@ Configure model hyperparameters:
 
 ```python
 # Random Forest with custom parameters
-rf_pipeline = FlowChain(
+rf_pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='median'),
     ScalerCrafter(scaler_type='robust'),
@@ -205,7 +205,7 @@ rf_pipeline = FlowChain(
 )
 
 # XGBoost with custom parameters
-xgb_pipeline = FlowChain(
+xgb_pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='mean'),
     ScalerCrafter(scaler_type='standard'),
@@ -222,7 +222,7 @@ xgb_pipeline = FlowChain(
 )
 
 # Logistic Regression with custom parameters
-lr_pipeline = FlowChain(
+lr_pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='drop'),
     ScalerCrafter(scaler_type='standard'),
@@ -244,7 +244,7 @@ Save trained models for later use:
 
 ```python
 # Train and save model
-save_pipeline = FlowChain(
+save_pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='median'),
     ScalerCrafter(scaler_type='standard'),
@@ -281,7 +281,7 @@ Handle pipeline errors gracefully:
 ```python
 try:
     # This might fail if file doesn't exist
-    pipeline = FlowChain(
+    pipeline = MLFChain(
         DataIngestCrafter(data_path='nonexistent_file.csv'),
         CleanerCrafter(strategy='drop'),
         ModelCrafter(model_name='random_forest')
@@ -308,13 +308,13 @@ except Exception as e:
 Enable detailed logging to see what's happening:
 
 ```python
-from flowcraft import setup_logger
+from mlfcrafter import setup_logger
 
 # Enable DEBUG logging to see detailed progress
 setup_logger(level='DEBUG')
 
 # Run pipeline with detailed logging
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='auto'),
     ScalerCrafter(scaler_type='standard'),
@@ -340,7 +340,7 @@ You can build pipelines step by step:
 
 ```python
 # Start with empty pipeline
-pipeline = FlowChain()
+pipeline = MLFChain()
 
 # Add crafters one by one
 pipeline.add_crafter(DataIngestCrafter(data_path=temp_file.name))
@@ -364,8 +364,8 @@ Here's a complete example showing all features:
 
 ```python
 import os
-from flowcraft import FlowChain, setup_logger
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain, setup_logger
+from mlfcrafter.crafters import *
 
 # Setup logging
 setup_logger(level='INFO')
@@ -389,7 +389,7 @@ temp_file.close()
 
 try:
     # Complete pipeline
-    pipeline = FlowChain(
+    pipeline = MLFChain(
         DataIngestCrafter(data_path=temp_file.name, source_type='auto'),
         CleanerCrafter(strategy='auto', str_fill='UNKNOWN', int_fill=0),
         ScalerCrafter(scaler_type='robust'),
@@ -453,5 +453,5 @@ finally:
 ## Next Steps
 
 - Learn about [User Guide](../user-guide/pipeline-basics.md) for more complex scenarios  
-- Check out [API Reference](../api/flowchain.md) to understand all options  
+- Check out [API Reference](../api/mlfchain.md) to understand all options  
 - Review [Getting Started Guide](../getting-started/quickstart.md) for additional examples 

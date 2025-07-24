@@ -1,93 +1,56 @@
-# FlowCraft - ML Pipeline Automation
+# MLFCrafter
 
-**FlowCraft** is a Python library that simplifies machine learning pipeline creation through chainable "crafter" components. Build, train, and deploy ML models with minimal code.
+> **Simple, chainable ML pipeline automation for Python**
 
-## Features
+[![PyPI Version](https://img.shields.io/pypi/v/mlfcrafter?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/mlfcrafter/)
+[![Python Support](https://img.shields.io/pypi/pyversions/mlfcrafter?logo=python&logoColor=white)](https://pypi.org/project/mlfcrafter/)
+[![Tests](https://github.com/brkcvlk/mlfcrafter/workflows/🧪%20Tests%20&%20Code%20Quality/badge.svg)](https://github.com/brkcvlk/mlfcrafter/actions)
+[![Documentation](https://github.com/brkcvlk/mlfcrafter/workflows/📚%20Deploy%20Documentation/badge.svg)](https://brkcvlk.github.io/mlfcrafter/)
+[![License](https://img.shields.io/github/license/brkcvlk/mlfcrafter?color=green)](LICENSE)
+[![Downloads](https://img.shields.io/pypi/dm/mlfcrafter?color=brightgreen)](https://pypi.org/project/mlfcrafter/)
 
-- **Chainable Architecture**: Connect multiple processing steps seamlessly
-- **Smart Data Handling**: Automatic data ingestion from CSV, Excel, JSON
-- **Intelligent Cleaning**: Multiple strategies for missing value handling
-- **Flexible Scaling**: MinMax, Standard, and Robust scaling options
-- **Multiple Models**: Random Forest, XGBoost, Logistic Regression support
-- **Comprehensive Metrics**: Accuracy, Precision, Recall, F1-Score
-- **Easy Deployment**: One-click model saving with metadata
-- **Context-Based**: Seamless data flow between pipeline steps
+---
 
-## Installation
+## ⭐ **If you find MLFCrafter useful, please consider starring this repository!**
 
-FlowCraft requires Python 3.8 or higher.
+<a href="https://github.com/brkcvlk/mlfcrafter/stargazers">
+  <img src="https://img.shields.io/github/stars/brkcvlk/mlfcrafter?style=social" alt="GitHub stars">
+</a>
 
-### From PyPI (Recommended)
+Your support helps us continue developing and improving MLFCrafter for the ML community.
 
-```bash
-pip install flowcraft
-```
+---
 
-### From Source
+## What is MLFCrafter?
 
-```bash
-git clone https://github.com/brkcvlk/flowcraft.git
-cd flowcraft
-pip install -r requirements.txt
-pip install .
-```
+MLFCrafter is a Python library that simplifies machine learning pipeline creation through chainable "crafter" components. Build, train, and deploy ML models with minimal code and maximum flexibility.
 
-### Development Installation
+## Key Features
 
-For development work, you have two options:
-
-#### Option 1: Using requirements-dev.txt (Recommended)
-```bash
-git clone https://github.com/brkcvlk/flowcraft.git
-cd flowcraft
-pip install -r requirements-dev.txt
-```
-
-#### Option 2: Using pyproject.toml optional dependencies
-```bash
-git clone https://github.com/brkcvlk/flowcraft.git
-cd flowcraft
-pip install -e ".[dev]"
-```
-
-### Dependency Groups
-
-- **Production**: `pip install -r requirements.txt`
-- **Development**: `pip install -r requirements-dev.txt` or `pip install -e ".[dev]"`  
-- **Testing Only**: `pip install -e ".[test]"`
-- **Documentation**: `pip install -e ".[docs]"`
-
-### Development Commands
-
-```bash
-# Run tests
-python -m pytest tests/ -v
-
-# Run tests with coverage  
-python -m pytest tests/ -v --cov=flowcraft --cov-report=html
-
-# Check code quality
-ruff check .
-
-# Auto-fix code issues
-ruff check --fix --unsafe-fixes .
-
-# Format code
-ruff format .
-
-# Run example
-python example.py
-```
+- **🔗 Chainable Architecture** - Connect multiple processing steps seamlessly
+- **📊 Smart Data Handling** - Automatic data ingestion from CSV, Excel, JSON
+- **🧹 Intelligent Cleaning** - Multiple strategies for missing value handling  
+- **📏 Flexible Scaling** - MinMax, Standard, and Robust scaling options
+- **🤖 Multiple Models** - Random Forest, XGBoost, Logistic Regression support
+- **📈 Comprehensive Metrics** - Accuracy, Precision, Recall, F1-Score
+- **💾 Easy Deployment** - One-click model saving with metadata
+- **🔄 Context-Based** - Seamless data flow between pipeline steps
 
 ## Quick Start
+
+### Installation
+
+```bash
+pip install mlfcrafter
+```
 
 ### Basic Usage
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
 
 # Create ML pipeline in one line
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(data_path="data/iris.csv"),
     CleanerCrafter(strategy="auto"),
     ScalerCrafter(scaler_type="standard"),
@@ -104,7 +67,7 @@ print(f"Test Score: {results['test_score']:.4f}")
 ### Advanced Configuration
 
 ```python
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(data_path="data/titanic.csv", source_type="csv"),
     CleanerCrafter(strategy="mean", str_fill="Unknown"),
     ScalerCrafter(scaler_type="minmax", columns=["age", "fare"]),
@@ -184,7 +147,7 @@ DeployCrafter(
 
 ### Step-by-Step Building
 ```python
-chain = FlowChain()
+chain = MLFChain()
 chain.add_crafter(DataIngestCrafter(data_path="data.csv"))
 chain.add_crafter(CleanerCrafter(strategy="median"))
 chain.add_crafter(ModelCrafter(model_name="xgboost"))
@@ -198,72 +161,65 @@ model = artifacts["model"]
 metadata = artifacts["metadata"]
 ```
 
-## Context Flow
+## Requirements
 
-FlowCraft uses a context dictionary that flows through each crafter:
+- **Python**: 3.8 or higher
+- **Core Dependencies**: pandas, scikit-learn, numpy, xgboost, joblib
 
-```python
-context = {
-    "data": pandas.DataFrame,           # Current dataset
-    "target_column": str,              # Target variable name
-    "model": trained_model,            # Trained model object
-    "scaler": fitted_scaler,          # Fitted scaler object
-    "scores": dict,                   # Performance metrics
-    "deployment_path": str,           # Saved model path
-    # ... and more metadata
-}
-```
+## Development
 
-## Project Structure
-
-```
-flowcraft/
-├── __init__.py
-├── flow_chain.py              # Main FlowChain class
-└── crafters/
-    ├── __init__.py
-    ├── data_ingest_crafter.py  # Data loading
-    ├── cleaner_crafter.py      # Data cleaning
-    ├── scaler_crafter.py       # Feature scaling
-    ├── model_crafter.py        # Model training
-    ├── scorer_crafter.py       # Performance metrics
-    └── deploy_crafter.py       # Model deployment
-```
-
-## Use Cases
-
-- **Rapid Prototyping**: Quick ML experiments with minimal boilerplate
-- **Educational**: Learn ML pipelines step-by-step
-- **Production**: Reproducible, configurable ML workflows
-- **Experimentation**: Easy A/B testing of different configurations
-- **Automation**: Scheduled model retraining and deployment
-
-## Dependencies
-
-- pandas >= 2.0.0
-- scikit-learn >= 1.3.0
-- numpy >= 1.24.0
-- xgboost >= 2.0.0
-- joblib >= 1.2.0
-
-## Examples
-
-Check out `example.py` for comprehensive usage examples.
-
-## Testing
+### Setup Development Environment
 
 ```bash
-pytest tests/test_flowcraft.py -v
+git clone https://github.com/brkcvlk/mlfcrafter.git
+cd mlfcrafter
+pip install -r requirements-dev.txt
+pip install -e .
 ```
+
+### Run Tests
+
+```bash
+# Run all tests
+python -m pytest tests/ -v
+
+# Run tests with coverage  
+python -m pytest tests/ -v --cov=mlfcrafter --cov-report=html
+
+# Check code quality
+ruff check .
+
+# Auto-fix code issues
+ruff check --fix .
+
+# Format code
+ruff format .
+```
+
+### Run Examples
+
+```bash
+python example.py
+```
+
+## Documentation
+
+Complete documentation is available at [brkcvlk.github.io/mlfcrafter](https://brkcvlk.github.io/mlfcrafter/)
 
 ## Contributing
 
-FlowCraft is designed to be extensible. Create custom crafters by implementing the `run(context: dict) -> dict` interface.
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ## License
 
-MIT License - feel free to use in your projects.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+- 📖 **Documentation**: [brkcvlk.github.io/mlfcrafter](https://brkcvlk.github.io/mlfcrafter/)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/brkcvlk/mlfcrafter/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/brkcvlk/mlfcrafter/discussions)
 
 ---
 
-*Built for the ML community* 
+**Made for the ML Community** 

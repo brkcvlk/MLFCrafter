@@ -1,11 +1,11 @@
 # DataIngestCrafter
 
-The **DataIngestCrafter** is responsible for loading data from various file formats into your FlowCraft pipeline. It serves as the entry point for your data, supporting multiple formats with automatic detection capabilities.
+The **DataIngestCrafter** is responsible for loading data from various file formats into your mlfcrafter pipeline. It serves as the entry point for your data, supporting multiple formats with automatic detection capabilities.
 
 ## Overview
 
 ```python
-from flowcraft import DataIngestCrafter
+from mlfcrafter import DataIngestCrafter
 
 crafter = DataIngestCrafter(
     data_path="data/sales.csv",
@@ -56,7 +56,7 @@ DataIngestCrafter()  # data_path provided in context
 
 | Option | Description | Use Case |
 |--------|-------------|----------|
-| `"auto"` | **Auto-detect** format from file extension | Most common - let FlowCraft decide |
+| `"auto"` | **Auto-detect** format from file extension | Most common - let mlfcrafter decide |
 | `"csv"` | Force **CSV** reading | When extension doesn't match or manual control |
 | `"excel"` | Force **Excel** reading | For .xls/.xlsx files |  
 | `"json"` | Force **JSON** reading | For structured JSON data |
@@ -140,10 +140,10 @@ DataIngestCrafter(data_path="api_response.json", source_type="json")
 
 ### Basic Usage
 ```python
-from flowcraft import FlowChain, DataIngestCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter
 
 # Simple CSV loading
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(data_path="data/customers.csv")
 )
 
@@ -154,15 +154,15 @@ print(f"Loaded {result['original_shape'][0]} rows")
 ### Multiple Format Support
 ```python
 # Auto-detect different formats
-csv_chain = FlowChain(DataIngestCrafter(data_path="data.csv"))
-excel_chain = FlowChain(DataIngestCrafter(data_path="data.xlsx"))
-json_chain = FlowChain(DataIngestCrafter(data_path="data.json"))
+csv_chain = MLFChain(DataIngestCrafter(data_path="data.csv"))
+excel_chain = MLFChain(DataIngestCrafter(data_path="data.xlsx"))
+json_chain = MLFChain(DataIngestCrafter(data_path="data.json"))
 ```
 
 ### Force Format Override
 ```python
 # CSV data in .txt file
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(
         data_path="exported_data.txt",
         source_type="csv"  # Force CSV parsing
@@ -172,7 +172,7 @@ chain = FlowChain(
 
 ### Path from Context
 ```python
-chain = FlowChain(DataIngestCrafter())  # No path specified
+chain = MLFChain(DataIngestCrafter())  # No path specified
 
 # Path provided at runtime
 result = chain.run(data_path="runtime_data.csv")
@@ -183,13 +183,13 @@ result = chain.run(data_path="runtime_data.csv")
 ## Complete Pipeline Example
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
 
 # Real-world pipeline
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(
         data_path="data/customer_churn.csv",
-        source_type="auto"  # Let FlowCraft auto-detect
+        source_type="auto"  # Let mlfcrafter auto-detect
     ),
     CleanerCrafter(strategy="auto"),
     ModelCrafter(model_name="random_forest")
@@ -233,7 +233,7 @@ crafter.run({})  # No path in context either
 ## Best Practices
 
 !!! tip "Use Auto-Detection"
-    Use `source_type="auto"` for most cases - FlowCraft handles format detection reliably.
+    Use `source_type="auto"` for most cases - mlfcrafter handles format detection reliably.
 
 !!! success "Validate Your Data"
     Always check `original_shape` in results to confirm data loaded correctly.
@@ -257,7 +257,7 @@ def create_data_pipeline(file_path):
     if not os.path.exists(file_path):
         file_path = "backup_data.csv"
     
-    return FlowChain(
+    return MLFChain(
         DataIngestCrafter(data_path=file_path),
         # ... other crafters
     )
@@ -280,7 +280,7 @@ DataIngestCrafter is typically the **first crafter** in any pipeline:
 
 ```python
 # Typical pipeline flow
-FlowChain(
+MLFChain(
     DataIngestCrafter(data_path="raw_data.csv"),      # 1️⃣ Load data
     CleanerCrafter(strategy="mean"),                   # 2️⃣ Clean data  
     ScalerCrafter(scaler_type="standard"),            # 3️⃣ Scale features
@@ -301,7 +301,7 @@ A: Either use `source_type="auto"` or ensure the source_type matches your file f
 A: Check your file format, headers, and ensure the file contains data.
 
 **Q: "Encoding issues with CSV"**  
-A: FlowCraft uses UTF-8 by default. Ensure your CSV file is properly encoded.
+A: mlfcrafter uses UTF-8 by default. Ensure your CSV file is properly encoded.
 
 **Q: "Excel file not loading"**  
 A: Ensure you have the required dependencies installed: `pip install openpyxl`. 

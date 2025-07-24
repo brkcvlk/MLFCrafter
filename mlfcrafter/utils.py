@@ -1,20 +1,20 @@
 """
-FlowCraft Logging Utilities
-===========================
+MLFCrafter Logging Utilities
+============================
 
-Centralized logging configuration for FlowCraft pipeline operations.
+Centralized logging configuration for MLFCrafter pipeline operations.
 """
 
 import logging
 import sys
 
 
-def setup_logger(name: str = "flowcraft", level: str = "INFO") -> logging.Logger:
+def setup_logger(name: str = "mlfcrafter", level: str = "INFO") -> logging.Logger:
     """
-    Setup FlowCraft logger with consistent formatting.
+    Setup MLFCrafter logger with consistent formatting.
 
     Args:
-        name: Logger name (default: "flowcraft")
+        name: Logger name (default: "mlfcrafter")
         level: Log level ("DEBUG", "INFO", "WARNING", "ERROR")
 
     Returns:
@@ -53,7 +53,7 @@ def get_crafter_logger(crafter_name: str) -> logging.Logger:
     Returns:
         Logger instance for the crafter
     """
-    return logging.getLogger(f"flowcraft.{crafter_name}")
+    return logging.getLogger(f"mlfcrafter.{crafter_name}")
 
 
 # Initialize default logger

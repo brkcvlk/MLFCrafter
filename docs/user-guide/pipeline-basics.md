@@ -1,10 +1,10 @@
 # Pipeline Basics
 
-Learn the fundamental concepts of FlowCraft pipelines and how to build effective ML workflows.
+Learn the fundamental concepts of MLFCrafter pipelines and how to build effective ML workflows.
 
-## What is a FlowChain?
+## What is a MLFChain?
 
-A `FlowChain` is the core orchestrator in FlowCraft that manages the execution of multiple processing steps (crafters) in sequence. It provides:
+A `MLFChain` is the core orchestrator in MLFCrafter that manages the execution of multiple processing steps (crafters) in sequence. It provides:
 
 - **Sequential Processing**: Steps execute in order
 - **Data Flow Management**: Automatic data passing between steps
@@ -15,10 +15,10 @@ A `FlowChain` is the core orchestrator in FlowCraft that manages the execution o
 ## Basic Pipeline Structure
 
 ```python
-from flowcraft import FlowChain
+from mlfcrafter import MLFChain
 
 # Create a new pipeline
-pipeline = FlowChain()
+pipeline = MLFChain()
 
 # Add processing steps
 pipeline.add(CrafterA())
@@ -44,7 +44,7 @@ Each crafter goes through several phases during execution:
 Data flows automatically between crafters:
 
 ```python
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add(DataIngestCrafter(data))      # Outputs: processed DataFrame
 pipeline.add(CleanerCrafter())             # Inputs: DataFrame, Outputs: clean DataFrame  
 pipeline.add(ScalerCrafter())              # Inputs: DataFrame, Outputs: scaled DataFrame
@@ -58,7 +58,7 @@ pipeline.add(ModelCrafter())               # Inputs: DataFrame, Outputs: trained
 Use fluent interface for concise pipeline building:
 
 ```python
-result = (FlowChain()
+result = (MLFChain()
     .add(DataIngestCrafter(data))
     .add(CleanerCrafter(strategy='impute'))
     .add(ModelCrafter(algorithm='xgboost'))
@@ -70,7 +70,7 @@ result = (FlowChain()
 Configure global pipeline behavior:
 
 ```python
-pipeline = FlowChain(
+pipeline = MLFChain(
     logging_level='INFO',
     fail_fast=True,
     parallel=False,
@@ -80,12 +80,12 @@ pipeline = FlowChain(
 
 ## Error Handling
 
-FlowCraft provides robust error handling:
+MLFCrafter provides robust error handling:
 
 ```python
 try:
     result = pipeline.execute()
-except FlowCraftError as e:
+except MLFCrafterError as e:
     print(f"Pipeline failed at step: {e.step}")
     print(f"Error: {e.message}")
     # Access intermediate results
@@ -97,7 +97,7 @@ except FlowCraftError as e:
 Monitor pipeline execution state:
 
 ```python
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add(DataIngestCrafter(data))
 pipeline.add(CleanerCrafter())
 
@@ -115,7 +115,7 @@ print(f"Pipeline state: {pipeline.state}")  # 'completed'
 Add conditional logic to pipelines:
 
 ```python
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add(DataIngestCrafter(data))
 
 # Conditional cleaning based on data quality
@@ -131,15 +131,15 @@ Create complex workflows with branching:
 
 ```python
 # Main pipeline
-main_pipeline = FlowChain()
+main_pipeline = MLFChain()
 main_pipeline.add(DataIngestCrafter(data))
 main_pipeline.add(CleanerCrafter())
 
 # Branch for different models
-rf_branch = FlowChain()
+rf_branch = MLFChain()
 rf_branch.add(ModelCrafter(algorithm='random_forest'))
 
-xgb_branch = FlowChain() 
+xgb_branch = MLFChain() 
 xgb_branch.add(ModelCrafter(algorithm='xgboost'))
 
 # Combine results
@@ -156,7 +156,7 @@ results = {
 Enable caching for expensive operations:
 
 ```python
-pipeline = FlowChain(cache_intermediate=True)
+pipeline = MLFChain(cache_intermediate=True)
 pipeline.add(DataIngestCrafter(data, cache_key='raw_data'))
 pipeline.add(CleanerCrafter(cache_key='clean_data'))
 ```
@@ -166,7 +166,7 @@ pipeline.add(CleanerCrafter(cache_key='clean_data'))
 Enable parallel execution where possible:
 
 ```python
-pipeline = FlowChain(parallel=True, n_jobs=4)
+pipeline = MLFChain(parallel=True, n_jobs=4)
 ```
 
 ## Best Practices
@@ -215,8 +215,8 @@ Use logging to track pipeline progress:
 ```python
 import logging
 
-pipeline = FlowChain(logging_level='INFO')
-# FlowCraft will automatically log step execution
+pipeline = MLFChain(logging_level='INFO')
+# MLFCrafter will automatically log step execution
 ```
 
 ## Common Patterns
@@ -224,7 +224,7 @@ pipeline = FlowChain(logging_level='INFO')
 ### Data Preprocessing Pipeline
 
 ```python
-preprocessing = (FlowChain()
+preprocessing = (MLFChain()
     .add(DataIngestCrafter(data))
     .add(CleanerCrafter(strategy='impute'))
     .add(ScalerCrafter(method='standard'))
@@ -234,7 +234,7 @@ preprocessing = (FlowChain()
 ### Model Training Pipeline
 
 ```python
-training = (FlowChain()
+training = (MLFChain()
     .add(ModelCrafter(algorithm='random_forest'))
     .add(ScorerCrafter(metrics=['accuracy', 'f1']))
     .add(ValidationCrafter(method='cross_val')))
@@ -243,7 +243,7 @@ training = (FlowChain()
 ### End-to-End Pipeline
 
 ```python
-complete_pipeline = (FlowChain()
+complete_pipeline = (MLFChain()
     .add(DataIngestCrafter(data))
     .add(CleanerCrafter())
     .add(ScalerCrafter())

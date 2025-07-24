@@ -5,7 +5,7 @@ The **ScorerCrafter** calculates performance metrics for trained models. It auto
 ## Overview
 
 ```python
-from flowcraft import ScorerCrafter
+from mlfcrafter import ScorerCrafter
 
 crafter = ScorerCrafter(
     metrics=["accuracy", "precision", "recall", "f1"]
@@ -36,25 +36,25 @@ List of metrics to calculate:
 ## Example Usage
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Calculate all metrics
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter())
 pipeline.add_crafter(ScorerCrafter())
 result = pipeline.run()
 
 # Calculate specific metrics only
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter())
 pipeline.add_crafter(ScorerCrafter(metrics=["accuracy", "f1"]))
 result = pipeline.run()
 
 # Just accuracy
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter())
 pipeline.add_crafter(ScorerCrafter(metrics=["accuracy"]))

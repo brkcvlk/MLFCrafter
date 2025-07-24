@@ -5,7 +5,7 @@ The **DeployCrafter** handles model deployment by saving trained models and asso
 ## Overview
 
 ```python
-from flowcraft import DeployCrafter
+from mlfcrafter import DeployCrafter
 
 crafter = DeployCrafter(
     model_path="my_model.joblib",
@@ -61,11 +61,11 @@ Whether to include training metadata (model name, features, scores, etc.).
 ## Example Usage
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Basic usage - auto-generate filename
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(CleanerCrafter())
 pipeline.add_crafter(ModelCrafter())
@@ -73,7 +73,7 @@ pipeline.add_crafter(DeployCrafter())
 result = pipeline.run()
 
 # Custom path and format
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter())
 pipeline.add_crafter(DeployCrafter(

@@ -1,6 +1,6 @@
 # Model Deployment
 
-Learn how to save and deploy your trained FlowCraft models using the DeployCrafter.
+Learn how to save and deploy your trained MLFCrafter models using the DeployCrafter.
 
 ## DeployCrafter Overview
 
@@ -11,10 +11,10 @@ The `DeployCrafter` handles model deployment by saving trained models and associ
 ### Save Model with Default Settings
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ModelCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ModelCrafter, DeployCrafter
 
 # Train and save model
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter("data.csv"),
     CleanerCrafter(strategy="auto"),
     ModelCrafter(),
@@ -75,10 +75,10 @@ deployer = DeployCrafter(
 ## Complete Deployment Pipeline
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
 
 # Full pipeline with deployment
-pipeline = FlowChain(
+pipeline = MLFChain(
     # Data processing
     DataIngestCrafter("sales_data.csv"),
     CleanerCrafter(
@@ -268,7 +268,7 @@ models/
 
 ```python
 # Complete production deployment example
-pipeline = FlowChain(
+pipeline = MLFChain(
     # Data pipeline
     DataIngestCrafter("production_data.csv"),
     CleanerCrafter(strategy="auto"),

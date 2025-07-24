@@ -1,0 +1,131 @@
+name: 📝 Generate Release Notes
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  generate-release-notes:
+    name: 📝 Generate Release Notes
+    runs-on: ubuntu-latest
+    # Only repository owner can generate release notes
+    if: github.actor == github.repository_owner
+    
+    steps:
+    - name: 🛒 Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for changelog generation
+        
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 📦 Install dependencies
+      run: |
+        pip install gitpython>=3.1.0
+        
+    - name: 📝 Generate changelog
+      id: changelog
+      run: |
+        python << 'EOF'
+        import git
+        import os
+        import re
+        from datetime import datetime
+        
+        repo = git.Repo('.')
+        
+        # Get the latest tag
+        if '${{ github.event.inputs.tag }}':
+            latest_tag = '${{ github.event.inputs.tag }}'
+        else:
+            latest_tag = str(repo.tags[-1])
+            
+        # Get previous tag for comparison
+        tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime, reverse=True)
+        if len(tags) > 1:
+            prev_tag = str(tags[1])
+            commits = list(repo.iter_commits(f'{prev_tag}..{latest_tag}'))
+        else:
+            commits = list(repo.iter_commits(latest_tag))
+        
+        # Categorize commits
+        features = []
+        fixes = []
+        docs = []
+        chores = []
+        
+        for commit in commits:
+            message = commit.message.strip()
+            if message.startswith(('feat:', 'feature:')):
+                features.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
+            elif message.startswith(('fix:', 'bugfix:')):
+                fixes.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
+            elif message.startswith(('docs:', 'doc:')):
+                docs.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
+            elif message.startswith(('chore:', 'refactor:', 'style:', 'test:')):
+                chores.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
+            elif not message.startswith(('Merge', 'merge')):
+                chores.append(f"- {message} ({commit.hexsha[:8]})")
+        
+        # Generate release notes
+        release_notes = f"""# MLFCrafter {latest_tag}
+        
+Released on {datetime.now().strftime('%Y-%m-%d')}
+
+## What's Changed
+"""
+        
+        if features:
+            release_notes += "\n### ✨ New Features\n" + "\n".join(features) + "\n"
+        
+        if fixes:
+            release_notes += "\n### 🐛 Bug Fixes\n" + "\n".join(fixes) + "\n"
+            
+        if docs:
+            release_notes += "\n### 📚 Documentation\n" + "\n".join(docs) + "\n"
+            
+        if chores:
+            release_notes += "\n### 🔧 Maintenance\n" + "\n".join(chores) + "\n"
+        
+        release_notes += f"""
+## Installation
+
+```bash
+pip install mlfcrafter=={latest_tag.lstrip('v')}
+```
+
+## Full Changelog
+
+**Full Changelog**: https://github.com/${{{{ github.repository }}}}/compare/{prev_tag if len(tags) > 1 else ''}...{latest_tag}
+"""
+        
+        # Save to file
+        with open('release_notes.md', 'w') as f:
+            f.write(release_notes)
+            
+        print("Release notes generated successfully!")
+        EOF
+        
+    - name: 📋 Upload release notes
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-notes
+        path: release_notes.md
+        
+    - name: 🚀 Update release
+      if: github.event_name == 'release'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const releaseNotes = fs.readFileSync('release_notes.md', 'utf8');
+          
+          await github.rest.repos.updateRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            release_id: context.payload.release.id,
+            body: releaseNotes
+          }); 

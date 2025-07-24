@@ -5,7 +5,7 @@ The **ScalerCrafter** normalizes numerical features using various scaling techni
 ## Overview
 
 ```python
-from flowcraft import ScalerCrafter
+from mlfcrafter import ScalerCrafter
 
 crafter = ScalerCrafter(
     scaler_type="minmax",
@@ -45,18 +45,18 @@ Specific columns to scale. If None, automatically selects all numerical columns 
 ## Example Usage
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Scale all numerical columns with MinMax
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ScalerCrafter(scaler_type="minmax"))
 pipeline.add_crafter(ModelCrafter())
 result = pipeline.run()
 
 # Standard scaling for specific columns
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ScalerCrafter(
     scaler_type="standard",
@@ -65,7 +65,7 @@ pipeline.add_crafter(ScalerCrafter(
 result = pipeline.run()
 
 # Robust scaling (good for data with outliers)
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ScalerCrafter(scaler_type="robust"))
 result = pipeline.run()

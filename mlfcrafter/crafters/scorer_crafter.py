@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 # Setup logger for this crafter
-logger = logging.getLogger("flowcraft.ScorerCrafter")
+logger = logging.getLogger("mlfcrafter.ScorerCrafter")
 
 
 class ScorerCrafter:

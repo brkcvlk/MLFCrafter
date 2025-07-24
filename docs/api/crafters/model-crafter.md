@@ -5,7 +5,7 @@ The **ModelCrafter** handles model selection, training, and evaluation. It suppo
 ## Overview
 
 ```python
-from flowcraft import ModelCrafter
+from mlfcrafter import ModelCrafter
 
 crafter = ModelCrafter(
     model_name="random_forest",
@@ -81,17 +81,17 @@ Whether to maintain class proportions in train/test split.
 ## Example Usage
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Basic Random Forest
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter())
 result = pipeline.run()
 
 # Tuned XGBoost
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter(
     model_name="xgboost",
@@ -105,7 +105,7 @@ pipeline.add_crafter(ModelCrafter(
 result = pipeline.run()
 
 # Logistic Regression
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(ModelCrafter(
     model_name="logistic_regression",

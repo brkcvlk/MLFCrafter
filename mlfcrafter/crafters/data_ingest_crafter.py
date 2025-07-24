@@ -5,14 +5,14 @@ from typing import Optional
 import pandas as pd
 
 # Setup logger for this crafter
-logger = logging.getLogger("flowcraft.DataIngestCrafter")
+logger = logging.getLogger("mlfcrafter.DataIngestCrafter")
 
 
 class DataIngestCrafter:
     """
     Data Ingestion Crafter for loading data from various file formats.
 
-    This crafter handles the first step of ML pipeline by loading data from
+    This crafter handles the first step of MLFCrafter pipeline by loading data from
     supported file formats (CSV, Excel, JSON) with automatic format detection
     or explicit format specification.
 

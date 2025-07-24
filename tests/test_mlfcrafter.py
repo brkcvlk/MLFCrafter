@@ -1,8 +1,8 @@
 """
-FlowCraft Test Suite
-===================
+MLFCrafter Test Suite
+====================
 
-Comprehensive test suite for FlowCraft ML pipeline automation tool using sklearn datasets.
+Comprehensive test suite for MLFCrafter ML pipeline automation tool using sklearn datasets.
 Tests individual crafters and end-to-end pipeline functionality.
 """
 
@@ -17,11 +17,11 @@ import pytest
 # Import sklearn datasets
 from sklearn.datasets import load_breast_cancer, load_iris, load_wine
 
-from flowcraft import (
+from mlfcrafter import (
     CleanerCrafter,
     DataIngestCrafter,
     DeployCrafter,
-    FlowChain,
+    MLFChain,
     ModelCrafter,
     ScalerCrafter,
     ScorerCrafter,
@@ -300,13 +300,13 @@ class TestDeployCrafter(TestDatasets):
 
 
 class TestEndToEndPipeline(TestDatasets):
-    """Integration tests for complete FlowCraft pipelines"""
+    """Integration tests for complete MLFCrafter pipelines"""
 
     def test_complete_pipeline_iris(self, temp_csv_file, tmp_path):
         """Test complete pipeline with Iris dataset"""
         model_path = tmp_path / "pipeline_model.joblib"
 
-        chain = FlowChain(
+        chain = MLFChain(
             DataIngestCrafter(data_path=temp_csv_file),
             CleanerCrafter(strategy="auto"),
             ScalerCrafter(scaler_type="standard"),
@@ -340,7 +340,7 @@ class TestEndToEndPipeline(TestDatasets):
 
         model_path = tmp_path / "wine_model.joblib"
 
-        chain = FlowChain(
+        chain = MLFChain(
             DataIngestCrafter(data_path=str(temp_file)),
             CleanerCrafter(strategy="mean"),
             ScalerCrafter(scaler_type="minmax"),

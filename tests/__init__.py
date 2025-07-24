@@ -1,9 +1,9 @@
 """
-FlowCraft Test Suite
-===================
+MLFCrafter Test Suite
+====================
 
-Test package for FlowCraft ML pipeline automation.
+Test package for MLFCrafter ML pipeline automation.
 
 Test Files:
-- test_flowcraft.py: Main pipeline tests (end-to-end)
+- test_mlfcrafter.py: Main pipeline tests (end-to-end)
 """

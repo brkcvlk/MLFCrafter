@@ -1,8 +1,8 @@
 """
-FlowCraft Logging System Tests
-=============================
+MLFCrafter Logging System Tests
+===============================
 
-Tests for FlowCraft's logging functionality using pytest.
+Tests for MLFCrafter's logging functionality using pytest.
 """
 
 from io import StringIO
@@ -14,17 +14,17 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from flowcraft import (
+from mlfcrafter import (
     CleanerCrafter,
     DataIngestCrafter,
-    FlowChain,
+    MLFChain,
     ModelCrafter,
     setup_logger,
 )
 
 
 class TestLoggingSystem:
-    """Test suite for FlowCraft logging functionality."""
+    """Test suite for MLFCrafter logging functionality."""
 
     @pytest.fixture
     def sample_data(self, tmp_path):
@@ -67,10 +67,10 @@ class TestLoggingSystem:
 
         # Also setup handlers for crafter loggers
         crafter_loggers = [
-            "flowcraft.DataIngestCrafter",
-            "flowcraft.CleanerCrafter",
-            "flowcraft.ModelCrafter",
-            "flowcraft.FlowChain",
+            "mlfcrafter.DataIngestCrafter",
+            "mlfcrafter.CleanerCrafter",
+            "mlfcrafter.ModelCrafter",
+            "mlfcrafter.MLFChain",
         ]
 
         for crafter_name in crafter_loggers:
@@ -157,9 +157,9 @@ class TestLoggingSystem:
         assert "Test accuracy:" in log_output
         assert "Model training completed successfully" in log_output
 
-    def test_flowchain_logging(self, sample_data, log_capture):
-        """Test FlowChain pipeline logging output."""
-        chain = FlowChain(
+    def test_mlfchain_logging(self, sample_data, log_capture):
+        """Test MLFChain pipeline logging output."""
+        chain = MLFChain(
             DataIngestCrafter(data_path=sample_data),
             CleanerCrafter(strategy="mean"),
             ModelCrafter(model_name="random_forest", model_params={"n_estimators": 5}),
@@ -169,13 +169,13 @@ class TestLoggingSystem:
 
         log_output = log_capture.getvalue()
 
-        # Check FlowChain coordination messages
-        assert "STARTING FLOWCRAFT PIPELINE" in log_output
-        assert "FlowChain initialized with 3 crafters" in log_output
+        # Check MLFChain coordination messages
+        assert "STARTING MLFCrafter PIPELINE" in log_output
+        assert "MLFChain initialized with 3 crafters" in log_output
         assert "[1/3] Running DataIngestCrafter" in log_output
         assert "[2/3] Running CleanerCrafter" in log_output
         assert "[3/3] Running ModelCrafter" in log_output
-        assert "FLOWCRAFT PIPELINE COMPLETED SUCCESSFULLY" in log_output
+        assert "MLFCrafter PIPELINE COMPLETED SUCCESSFULLY" in log_output
 
         # Verify we get individual crafter completions
         assert "DataIngestCrafter completed successfully" in log_output
@@ -207,7 +207,7 @@ class TestLoggingSystem:
         debug_logger.addHandler(handler)
 
         # Setup crafter logger to use our debug handler
-        crafter_logger = logging.getLogger("flowcraft.DataIngestCrafter")
+        crafter_logger = logging.getLogger("mlfcrafter.DataIngestCrafter")
         crafter_logger.handlers = [handler]
         crafter_logger.setLevel(logging.DEBUG)
 

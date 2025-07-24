@@ -8,14 +8,14 @@ from typing import Optional
 import joblib
 
 # Setup logger for this crafter
-logger = logging.getLogger("flowcraft.DeployCrafter")
+logger = logging.getLogger("mlfcrafter.DeployCrafter")
 
 
 class DeployCrafter:
     """
     Model Deployment Crafter for saving trained models and artifacts.
 
-    This crafter handles the final step of ML pipeline by saving the trained model
+    This crafter handles the final step of MLFCrafter pipeline by saving the trained model
     along with associated artifacts (scaler, metadata) to disk for future use.
     It supports multiple serialization formats and provides utilities for loading
     saved models.

@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "flowcraft"
+name = "mlfcrafter"
 version = "0.1.0"
 description = "ML Pipeline Automation Made Simple - Chain together data processing, model training, and deployment with minimal code"
 readme = "README.md"
@@ -69,9 +69,9 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/brkcvlk/flowcraft"
-Repository = "https://github.com/brkcvlk/flowcraft"
-"bug-report" = "https://github.com/brkcvlk/flowcraft/issues"
+Homepage = "https://github.com/brkcvlk/mlfcrafter"
+Repository = "https://github.com/brkcvlk/mlfcrafter"
+"bug-report" = "https://github.com/brkcvlk/mlfcrafter/issues"
 
 [tool.ruff]
 # Same as Black.

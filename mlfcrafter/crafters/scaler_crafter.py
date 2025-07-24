@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 
 # Setup logger for this crafter
-logger = logging.getLogger("flowcraft.ScalerCrafter")
+logger = logging.getLogger("mlfcrafter.ScalerCrafter")
 
 
 class ScalerCrafter:

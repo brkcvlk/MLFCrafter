@@ -1,6 +1,6 @@
 # Model Training
 
-Learn how to train and evaluate machine learning models using FlowCraft's ModelCrafter.
+Learn how to train and evaluate machine learning models using MLFCrafter's ModelCrafter.
 
 ## ModelCrafter Overview
 
@@ -8,10 +8,10 @@ The `ModelCrafter` handles model selection, training, and evaluation. It support
 
 ## Supported Algorithms
 
-FlowCraft supports three main algorithms:
+MLFCrafter supports three main algorithms:
 
 ```python
-from flowcraft import ModelCrafter
+from mlfcrafter import ModelCrafter
 
 # Random Forest (default)
 model = ModelCrafter(model_name="random_forest")
@@ -28,10 +28,10 @@ model = ModelCrafter(model_name="xgboost")
 ### Simple Model Training
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
 
 # Train a Random Forest model
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter("data.csv"),
     CleanerCrafter(strategy="auto"),
     ModelCrafter(model_name="random_forest")
@@ -105,7 +105,7 @@ model = ModelCrafter(
 
 ```python
 # Full training pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     # Data processing
     DataIngestCrafter("customer_data.csv"),
     CleanerCrafter(strategy="median"),
@@ -162,7 +162,7 @@ models = {
 
 results = {}
 for name, model in models.items():
-    pipeline = FlowChain(
+    pipeline = MLFChain(
         DataIngestCrafter("data.csv"),
         CleanerCrafter(strategy="auto"),
         ScalerCrafter(scaler_type="standard"),
@@ -185,7 +185,7 @@ for name, scores in results.items():
 
 ```python
 # Evaluate with multiple metrics
-pipeline = FlowChain(
+pipeline = MLFChain(
     # ... other crafters ...
     ScorerCrafter(
         metrics=["accuracy", "precision", "recall", "f1"]
@@ -235,10 +235,10 @@ scorer = ScorerCrafter(metrics=["accuracy"])
 ## Complete Example
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
 
 # E-commerce customer classification
-pipeline = FlowChain(
+pipeline = MLFChain(
     # Load and process data
     DataIngestCrafter("customers.csv"),
     CleanerCrafter(

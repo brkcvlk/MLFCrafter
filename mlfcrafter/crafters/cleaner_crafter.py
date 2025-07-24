@@ -3,7 +3,7 @@ import logging
 import numpy as np
 
 # Setup logger for this crafter
-logger = logging.getLogger("flowcraft.CleanerCrafter")
+logger = logging.getLogger("mlfcrafter.CleanerCrafter")
 
 
 class CleanerCrafter:

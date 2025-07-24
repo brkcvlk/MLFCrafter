@@ -1,6 +1,6 @@
 <div align="center">
   <h1 style="font-size: 3.5em; margin: 0.5em 0;">
-    FlowCraft
+    MLFCrafter
   </h1>
   <h2>🚀 ML Pipeline Automation Made Simple</h2>
   <p>Build, train, and deploy machine learning models with minimal code through chainable "crafter" components.</p>
@@ -8,15 +8,15 @@
 
 ---
 
-## What is FlowCraft?
+## What is MLFCrafter?
 
-**FlowCraft** is a powerful Python framework that simplifies machine learning pipeline creation through a modular, chainable architecture. Instead of writing repetitive boilerplate code, you can compose sophisticated ML workflows by connecting specialized "crafters" together.
+**MLFCrafter** is a powerful Python framework that simplifies machine learning pipeline creation through a modular, chainable architecture. Instead of writing repetitive boilerplate code, you can compose sophisticated ML workflows by connecting specialized "crafters" together.
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
 
 # Create a complete ML pipeline in 4 lines
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy="auto"),
     ModelCrafter(model_name="random_forest")
@@ -54,7 +54,7 @@ Detailed pipeline tracking with configurable log levels for debugging and monito
 
 ## 🏗️ Architecture Overview
 
-FlowCraft uses a **context-based pipeline architecture** where each crafter:
+MLFCrafter uses a **context-based pipeline architecture** where each crafter:
 
 1. **Receives** a context dictionary with data and metadata
 2. **Processes** the data according to its specialization  
@@ -90,17 +90,17 @@ FlowCraft uses a **context-based pipeline architecture** where each crafter:
 ### Installation
 
 ```bash
-pip install flowcraft
+pip install mlfcrafter
 ```
 
 ### Your First Pipeline
 
 ```python
-from flowcraft import *
+from mlfcrafter import *
 import pandas as pd
 
 # Load your data
-chain = FlowChain(
+chain = MLFChain(
     DataIngestCrafter(data_path="your_data.csv"),
     CleanerCrafter(strategy="mean"),           # Handle missing values
     ScalerCrafter(scaler_type="standard"),     # Normalize features  
@@ -128,7 +128,7 @@ print(f"💾 Model Saved: {results['deployment_successful']}")
     
     ---
     
-    New to FlowCraft? Start here with installation and your first pipeline.
+    New to MLFCrafter? Start here with installation and your first pipeline.
     
     [→ Getting Started](getting-started/installation.md)
 
@@ -146,7 +146,7 @@ print(f"💾 Model Saved: {results['deployment_successful']}")
     
     Complete documentation of all crafters, parameters, and methods.
     
-    [→ API Reference](api/flowchain.md)
+    [→ API Reference](api/mlfchain.md)
 
 -   **💡 Examples**
     
@@ -160,10 +160,10 @@ print(f"💾 Model Saved: {results['deployment_successful']}")
 
 ---
 
-## 🎯 Why Choose FlowCraft?
+## 🎯 Why Choose MLFCrafter?
 
 !!! success "Production Ready"
-    FlowCraft is built with production in mind - comprehensive logging, error handling, and testing ensure reliability.
+    MLFCrafter is built with production in mind - comprehensive logging, error handling, and testing ensure reliability.
 
 !!! info "Developer Friendly" 
     Intuitive API design with clear documentation and helpful error messages make development fast and enjoyable.
@@ -178,15 +178,15 @@ print(f"💾 Model Saved: {results['deployment_successful']}")
 
 ## 🤝 Community & Support
 
-- **GitHub**: [brkcvlk/flowcraft](https://github.com/brkcvlk/flowcraft)
+- **GitHub**: [brkcvlk/mlfcrafter](https://github.com/brkcvlk/mlfcrafter)
 - **Issues**: Report bugs or request features
 - **Discussions**: Ask questions and share ideas  
-- **PyPI**: [flowcraft package](https://pypi.org/project/flowcraft/)
+- **PyPI**: [mlfcrafter package](https://pypi.org/project/mlfcrafter/)
 
 ---
 
 <div align="center">
   <p><strong>Ready to build your first ML pipeline?</strong></p>
   <a href="getting-started/installation/" class="md-button md-button--primary">Get Started</a>
-  <a href="api/flowchain/" class="md-button">API Reference</a>
+  <a href="api/mlfchain/" class="md-button">API Reference</a>
 </div>

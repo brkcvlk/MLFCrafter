@@ -1,11 +1,11 @@
-site_name: FlowCraft Documentation
-site_description: ML Pipeline Automation Made Simple - Complete documentation for FlowCraft framework
+site_name: MLFCrafter Documentation
+site_description: ML Pipeline Automation Made Simple - Complete documentation for MLFCrafter framework
 site_author: Burak Civelek
-site_url: https://brkcvlk.github.io/flowcraft
+site_url: https://brkcvlk.github.io/mlfcrafter
 
 # Repository
-repo_name: brkcvlk/flowcraft
-repo_url: https://github.com/brkcvlk/flowcraft
+repo_name: brkcvlk/mlfcrafter
+repo_url: https://github.com/brkcvlk/mlfcrafter
 
 # Theme
 theme:
@@ -84,7 +84,7 @@ nav:
     - Model Deployment: user-guide/deployment.md
     - Logging & Debugging: user-guide/logging.md
   - API Reference:
-    - FlowChain: api/flowchain.md
+    - MLFChain: api/mlfchain.md
     - Crafters:
       - DataIngestCrafter: api/crafters/data-ingest-crafter.md
       - CleanerCrafter: api/crafters/cleaner-crafter.md
@@ -100,9 +100,9 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/brkcvlk/flowcraft
+      link: https://github.com/brkcvlk/mlfcrafter
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/flowcraft/
+      link: https://pypi.org/project/mlfcrafter/
   version:
     provider: mike
 

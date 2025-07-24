@@ -1,16 +1,16 @@
 # Utilities API Reference
 
-FlowCraft provides logging utilities to support pipeline development and debugging.
+MLFCrafter provides logging utilities to support pipeline development and debugging.
 
 ## Logging Utilities
 
-### `setup_logger(name="flowcraft", level="INFO")`
+### `setup_logger(name="mlfcrafter", level="INFO")`
 
-Setup FlowCraft logger with consistent formatting.
+Setup MLFCrafter logger with consistent formatting.
 
 **Parameters:**
 
-- `name` (str): Logger name. Default: "flowcraft"
+- `name` (str): Logger name. Default: "mlfcrafter"
 - `level` (str): Log level ("DEBUG", "INFO", "WARNING", "ERROR"). Default: "INFO"
 
 **Returns:** `logging.Logger` - Configured logger instance
@@ -18,7 +18,7 @@ Setup FlowCraft logger with consistent formatting.
 **Example:**
 
 ```python
-from flowcraft import setup_logger
+from mlfcrafter import setup_logger
 
 # Setup default logger
 logger = setup_logger()
@@ -40,7 +40,7 @@ Get logger for specific crafter.
 **Example:**
 
 ```python
-from flowcraft.utils import get_crafter_logger
+from mlfcrafter.utils import get_crafter_logger
 
 # Get logger for custom crafter
 logger = get_crafter_logger("CustomCrafter")
@@ -49,10 +49,10 @@ logger.info("Custom crafter started")
 
 ## Logger Configuration
 
-The FlowCraft logging system provides:
+The mlfcrafter logging system provides:
 
 - **Consistent formatting**: All logs use the same format with timestamps
-- **Hierarchical loggers**: Each crafter gets its own logger (e.g., "flowcraft.ModelCrafter")
+- **Hierarchical loggers**: Each crafter gets its own logger (e.g., "mlfcrafter.ModelCrafter")
 - **Default level**: INFO level by default
 - **Console output**: Logs are written to stdout by default
 
@@ -65,9 +65,9 @@ HH:MM:SS - logger_name - LEVEL - message
 
 **Example output:**
 ```
-15:30:45 - flowcraft.DataIngestCrafter - INFO - Starting data ingestion...
-15:30:45 - flowcraft.DataIngestCrafter - INFO - Loading data from: data.csv
-15:30:46 - flowcraft.CleanerCrafter - INFO - Starting data cleaning...
+15:30:45 - mlfcrafter.DataIngestCrafter - INFO - Starting data ingestion...
+15:30:45 - mlfcrafter.DataIngestCrafter - INFO - Loading data from: data.csv
+15:30:46 - mlfcrafter.CleanerCrafter - INFO - Starting data cleaning...
 ```
 
 ## Usage Examples
@@ -75,7 +75,7 @@ HH:MM:SS - logger_name - LEVEL - message
 ### Basic Logging Setup
 
 ```python
-from flowcraft import setup_logger
+from mlfcrafter import setup_logger
 
 # Setup with default settings (INFO level)
 logger = setup_logger()
@@ -90,7 +90,7 @@ app_logger = setup_logger(name="my_app", level="WARNING")
 ### Using Logging in Custom Code
 
 ```python
-from flowcraft.utils import get_crafter_logger
+from mlfcrafter.utils import get_crafter_logger
 
 # In a custom crafter or script
 logger = get_crafter_logger("CustomProcessor")
@@ -104,14 +104,14 @@ logger.error("Failed to process batch")
 ### Pipeline Logging Example
 
 ```python
-from flowcraft import FlowChain, setup_logger
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain, setup_logger
+from mlfcrafter.crafters import *
 
 # Setup logging with DEBUG level to see detailed output
 setup_logger(level="DEBUG")
 
 # Create pipeline - all crafters will log their progress
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy="auto"),
     ModelCrafter(model_name="random_forest")
@@ -121,39 +121,39 @@ pipeline = FlowChain(
 results = pipeline.run(target_column="target")
 
 # Expected log output:
-# 15:30:45 - flowcraft.FlowChain - INFO - FlowChain initialized with 3 crafters
-# 15:30:45 - flowcraft.FlowChain - INFO - STARTING FLOWCRAFT PIPELINE
-# 15:30:45 - flowcraft.DataIngestCrafter - INFO - Starting data ingestion...
-# 15:30:45 - flowcraft.DataIngestCrafter - INFO - Loading data from: data.csv
-# 15:30:46 - flowcraft.CleanerCrafter - INFO - Starting data cleaning...
+# 15:30:45 - mlfcrafter.MLFChain - INFO - MLFChain initialized with 3 crafters
+# 15:30:45 - mlfcrafter.MLFChain - INFO - STARTING mlfcrafter PIPELINE
+# 15:30:45 - mlfcrafter.DataIngestCrafter - INFO - Starting data ingestion...
+# 15:30:45 - mlfcrafter.DataIngestCrafter - INFO - Loading data from: data.csv
+# 15:30:46 - mlfcrafter.CleanerCrafter - INFO - Starting data cleaning...
 # ... and so on
 ```
 
 ## Available Loggers
 
-FlowCraft automatically creates loggers for each crafter:
+mlfcrafter automatically creates loggers for each crafter:
 
-- `flowcraft.FlowChain`: Main pipeline logger
-- `flowcraft.DataIngestCrafter`: Data loading logger
-- `flowcraft.CleanerCrafter`: Data cleaning logger
-- `flowcraft.ScalerCrafter`: Data scaling logger
-- `flowcraft.ModelCrafter`: Model training logger
-- `flowcraft.ScorerCrafter`: Model scoring logger
-- `flowcraft.DeployCrafter`: Model deployment logger
+- `mlfcrafter.MLFChain`: Main pipeline logger
+- `mlfcrafter.DataIngestCrafter`: Data loading logger
+- `mlfcrafter.CleanerCrafter`: Data cleaning logger
+- `mlfcrafter.ScalerCrafter`: Data scaling logger
+- `mlfcrafter.ModelCrafter`: Model training logger
+- `mlfcrafter.ScorerCrafter`: Model scoring logger
+- `mlfcrafter.DeployCrafter`: Model deployment logger
 
 Each logger provides detailed information about the operations performed by its corresponding crafter.
 
 ## Complete Example
 
 ```python
-from flowcraft import FlowChain, setup_logger
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain, setup_logger
+from mlfcrafter.crafters import *
 
 # Setup detailed logging
 logger = setup_logger(level="DEBUG")
 
 # Create and run pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy="median"),
     ScalerCrafter(scaler_type="standard"),

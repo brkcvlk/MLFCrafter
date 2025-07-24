@@ -1,6 +1,6 @@
 # Your First Pipeline
 
-In this tutorial, you'll build a complete end-to-end machine learning pipeline using FlowCraft. We'll work with the Iris dataset and go through every step from data ingestion to model deployment.
+In this tutorial, you'll build a complete end-to-end machine learning pipeline using MLFCrafter. We'll work with the Iris dataset and go through every step from data ingestion to model deployment.
 
 ## Dataset: Iris Classification
 
@@ -10,7 +10,7 @@ We'll use the classic Iris dataset to build a flower classification model.
 import pandas as pd
 import tempfile
 from sklearn.datasets import load_iris
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
 
 # Load the Iris dataset
 iris = load_iris()
@@ -41,7 +41,7 @@ Create a complete ML pipeline with all necessary steps:
 
 ```python
 # Create the complete pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     # Step 1: Load data
     DataIngestCrafter(data_path=temp_file.name, source_type="csv"),
     
@@ -156,7 +156,7 @@ You can also build the pipeline step by step if needed:
 
 ```python
 # Alternative approach: build pipeline incrementally
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter(data_path=temp_file.name))
 pipeline.add_crafter(CleanerCrafter(strategy="auto"))
 pipeline.add_crafter(ScalerCrafter(scaler_type="standard"))
@@ -178,7 +178,7 @@ Here's the complete pipeline in one block:
 import pandas as pd
 import tempfile
 from sklearn.datasets import load_iris
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
 
 # Load and prepare data
 iris = load_iris()
@@ -191,7 +191,7 @@ data.to_csv(temp_file.name, index=False)
 temp_file.close()
 
 # Build and run pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy="auto"),
     ScalerCrafter(scaler_type="standard"),
@@ -219,7 +219,7 @@ os.unlink(temp_file.name)
 
 ## Key Takeaways
 
-1. **Simple API**: FlowCraft uses constructor-based configuration
+1. **Simple API**: MLFCrafter uses constructor-based configuration
 2. **File-Based Input**: DataIngestCrafter loads from CSV, Excel, or JSON files
 3. **Context Flow**: Data flows automatically between crafters via context dictionary
 4. **All-in-One**: Single `run()` call executes the entire pipeline

@@ -6,7 +6,7 @@ import mkdocs_gen_files
 
 nav = mkdocs_gen_files.Nav()
 
-for path in sorted(Path("flowcraft").rglob("*.py")):
+for path in sorted(Path("mlfcrafter").rglob("*.py")):
     module_path = path.relative_to(".").with_suffix("")
     doc_path = path.relative_to(".").with_suffix(".md")
     full_doc_path = Path("reference", doc_path)
@@ -29,4 +29,4 @@ for path in sorted(Path("flowcraft").rglob("*.py")):
     mkdocs_gen_files.set_edit_path(full_doc_path, path)
 
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
-    nav_file.writelines(nav.build_literate_nav()) 
+    nav_file.writelines(nav.build_literate_nav())

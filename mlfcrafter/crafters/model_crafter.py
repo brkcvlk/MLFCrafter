@@ -4,7 +4,7 @@ from typing import Dict, Optional
 from sklearn.model_selection import train_test_split
 
 # Setup logger for this crafter
-logger = logging.getLogger("flowcraft.ModelCrafter")
+logger = logging.getLogger("mlfcrafter.ModelCrafter")
 
 
 class ModelCrafter:
@@ -207,7 +207,10 @@ class ModelCrafter:
             logger.debug("Initializing LogisticRegression")
             from sklearn.linear_model import LogisticRegression
 
-            return LogisticRegression(**self.model_params)
+            # Default params to avoid convergence warnings
+            default_params = {"max_iter": 5000, "solver": "liblinear"}
+            default_params.update(self.model_params)
+            return LogisticRegression(**default_params)
 
         elif self.model_name == "xgboost":
             logger.debug("Initializing XGBClassifier")

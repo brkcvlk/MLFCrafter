@@ -1,6 +1,6 @@
 # Data Processing
 
-Learn how to effectively clean, transform, and prepare your data using FlowCraft's data processing crafters.
+Learn how to effectively clean, transform, and prepare your data using MLFCrafter's data processing crafters.
 
 ## Data Ingestion
 
@@ -9,22 +9,22 @@ The `DataIngestCrafter` loads data from various file formats into your pipeline.
 ### Basic Usage
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter
 
 # Load CSV file
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv")
 )
 result = pipeline.run()
 
 # Load Excel file
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.xlsx", source_type="excel")
 )
 result = pipeline.run()
 
 # Auto-detect format
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.json")
 )
 result = pipeline.run()
@@ -48,7 +48,7 @@ The `CleanerCrafter` handles missing values in your dataset.
 ### Missing Value Strategies
 
 ```python
-from flowcraft import CleanerCrafter
+from mlfcrafter import CleanerCrafter
 
 # Auto strategy - automatically choose based on data type
 cleaner = CleanerCrafter(strategy="auto")
@@ -73,7 +73,7 @@ cleaner = CleanerCrafter(
 
 ```python
 # Clean dataset with auto strategy
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter("messy_data.csv"),
     CleanerCrafter(strategy="auto")
 )
@@ -90,7 +90,7 @@ The `ScalerCrafter` normalizes numerical features.
 ### Scaling Methods
 
 ```python
-from flowcraft import ScalerCrafter
+from mlfcrafter import ScalerCrafter
 
 # MinMax scaling - scales to [0,1] range
 scaler = ScalerCrafter(scaler_type="minmax")
@@ -119,7 +119,7 @@ scaler = ScalerCrafter(
 
 ```python
 # Full data processing pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter("customer_data.csv"),
     CleanerCrafter(strategy="auto"),
     ScalerCrafter(scaler_type="standard")
@@ -135,10 +135,10 @@ print(f"Scaler type: {result['scaler_type']}")
 Combine all data processing steps:
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter
 
 # Complete preprocessing pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     # 1. Load data
     DataIngestCrafter(
         data_path="raw_data.csv",

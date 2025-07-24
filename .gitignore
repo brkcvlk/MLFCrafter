@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# FlowCraft specific
+# MLFCrafter specific
 *.joblib
 *.pkl
 *.csv

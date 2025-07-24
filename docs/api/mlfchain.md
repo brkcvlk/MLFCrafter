@@ -1,14 +1,14 @@
-# FlowChain API Reference
+# MLFChain API Reference
 
-The `FlowChain` class is the core orchestrator for building and executing ML pipelines in FlowCraft.
+The `MLFChain` class is the core orchestrator for building and executing ML pipelines in mlfcrafter.
 
 ## Class Definition
 
 ```python
-class FlowChain:
+class MLFChain:
     """
-    Initialize FlowChain with multiple crafters
-    Usage: FlowChain(DataIngestCrafter(...), CleanerCrafter(...), ...)
+    Initialize MLFChain with multiple crafters
+    Usage: MLFChain(DataIngestCrafter(...), CleanerCrafter(...), ...)
     """
 ```
 
@@ -16,7 +16,7 @@ class FlowChain:
 
 ### `__init__(self, *crafters)`
 
-Creates a new FlowChain instance with the specified crafters.
+Creates a new MLFChain instance with the specified crafters.
 
 **Parameters:**
 
@@ -25,18 +25,18 @@ Creates a new FlowChain instance with the specified crafters.
 **Example:**
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import DataIngestCrafter, CleanerCrafter, ModelCrafter
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import DataIngestCrafter, CleanerCrafter, ModelCrafter
 
 # Initialize with crafters
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy="auto"),
     ModelCrafter(model_name="random_forest")
 )
 
 # Or initialize empty and add crafters later
-pipeline = FlowChain()
+pipeline = MLFChain()
 ```
 
 ## Methods
@@ -52,9 +52,9 @@ Adds a single crafter to the pipeline chain.
 **Example:**
 
 ```python
-from flowcraft.crafters import DataIngestCrafter, CleanerCrafter
+from mlfcrafter.crafters import DataIngestCrafter, CleanerCrafter
 
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter(data_path="data.csv"))
 pipeline.add_crafter(CleanerCrafter(strategy="auto"))
 ```
@@ -150,7 +150,7 @@ print(f"Model saved to: {results.get('deployment_path', 'Not saved')}")
 
 ## Error Handling
 
-FlowChain handles errors that occur during pipeline execution:
+MLFChain handles errors that occur during pipeline execution:
 
 **Common Exceptions:**
 
@@ -175,11 +175,11 @@ except ValueError as e:
 ### Basic Pipeline
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Create pipeline with all crafters
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy="auto"),
     ScalerCrafter(scaler_type="standard"),
@@ -197,7 +197,7 @@ print(f"Model accuracy: {results['test_score']:.4f}")
 
 ```python
 # Create empty pipeline
-pipeline = FlowChain()
+pipeline = MLFChain()
 
 # Add crafters one by one
 pipeline.add_crafter(DataIngestCrafter(data_path="data.csv"))

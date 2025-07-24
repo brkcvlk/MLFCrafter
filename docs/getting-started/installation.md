@@ -1,6 +1,6 @@
 # Installation
 
-FlowCraft can be installed using pip from PyPI or directly from the source.
+MLFCrafter can be installed using pip from PyPI or directly from the source.
 
 ## Requirements
 
@@ -10,7 +10,7 @@ FlowCraft can be installed using pip from PyPI or directly from the source.
 ## Install from PyPI
 
 ```bash
-pip install flowcraft
+pip install mlfcrafter
 ```
 
 ## Install from Source
@@ -18,8 +18,8 @@ pip install flowcraft
 If you want to install the latest development version or contribute to the project:
 
 ```bash
-git clone https://github.com/brkcvlk/flowcraft.git
-cd flowcraft
+git clone https://github.com/brkcvlk/mlfcrafter.git
+cd mlfcrafter
 pip install -e .
 ```
 
@@ -28,23 +28,23 @@ pip install -e .
 For development, install with development dependencies:
 
 ```bash
-git clone https://github.com/brkcvlk/flowcraft.git
-cd flowcraft
+git clone https://github.com/brkcvlk/mlfcrafter.git
+cd mlfcrafter
 pip install -e ".[dev]"
 ```
 
 ## Verify Installation
 
-To verify that FlowCraft is installed correctly, run:
+To verify that MLFCrafter is installed correctly, run:
 
 ```python
-import flowcraft
-print(flowcraft.__version__)
+import mlfcrafter
+print(mlfcrafter.__version__)
 ```
 
 ## Dependencies
 
-FlowCraft automatically installs the following core dependencies:
+MLFCrafter automatically installs the following core dependencies:
 
 - **pandas** (>=2.0.0) - Data manipulation and analysis
 - **scikit-learn** (>=1.3.0) - Machine learning library
@@ -59,7 +59,7 @@ FlowCraft automatically installs the following core dependencies:
 To build documentation locally:
 
 ```bash
-pip install "flowcraft[docs]"
+pip install "mlfcrafter[docs]"
 ```
 
 ### Testing
@@ -67,7 +67,7 @@ pip install "flowcraft[docs]"
 For running tests:
 
 ```bash
-pip install "flowcraft[test]"
+pip install "mlfcrafter[test]"
 ```
 
 ## Troubleshooting
@@ -83,9 +83,9 @@ pip install "flowcraft[test]"
 We recommend using a virtual environment:
 
 ```bash
-python -m venv flowcraft-env
-source flowcraft-env/bin/activate  # On Windows: flowcraft-env\Scripts\activate
-pip install flowcraft
+python -m venv mlfcrafter-env
+source mlfcrafter-env/bin/activate  # On Windows: mlfcrafter-env\Scripts\activate
+pip install mlfcrafter
 ```
 
 ## Next Steps

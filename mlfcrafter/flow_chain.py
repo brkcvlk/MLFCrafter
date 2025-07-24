@@ -1,18 +1,18 @@
 import logging
 
-# Setup logger for FlowChain
-logger = logging.getLogger("flowcraft.FlowChain")
+# Setup logger for MLFChain
+logger = logging.getLogger("mlfcrafter.MLFChain")
 
 
-class FlowChain:
+class MLFChain:
     """
-    Initialize FlowChain with multiple crafters
-    Usage: FlowChain(DataIngestCrafter(...), CleanerCrafter(...), ...)
+    Initialize MLFChain with multiple crafters
+    Usage: MLFChain(DataIngestCrafter(...), CleanerCrafter(...), ...)
     """
 
     def __init__(self, *crafters):
         self.crafters = list(crafters)
-        logger.info(f"FlowChain initialized with {len(self.crafters)} crafters")
+        logger.info(f"MLFChain initialized with {len(self.crafters)} crafters")
         for i, crafter in enumerate(self.crafters, 1):
             logger.debug(f"Crafter {i}: {type(crafter).__name__}")
 
@@ -29,7 +29,7 @@ class FlowChain:
             **kwargs: Additional parameters to pass to the first crafter
         """
         logger.info("=" * 50)
-        logger.info("STARTING FLOWCRAFT PIPELINE")
+        logger.info("STARTING MLFCrafter PIPELINE")
         logger.info("=" * 50)
 
         if target_column:
@@ -62,7 +62,7 @@ class FlowChain:
                 ) from e
 
         logger.info("=" * 50)
-        logger.info("FLOWCRAFT PIPELINE COMPLETED SUCCESSFULLY")
+        logger.info("MLFCrafter PIPELINE COMPLETED SUCCESSFULLY")
         logger.info("=" * 50)
 
         return context

@@ -1,42 +1,42 @@
 # Logging & Debugging
 
-Learn how to effectively log, monitor, and debug your FlowCraft pipelines for better observability and troubleshooting.
+Learn how to effectively log, monitor, and debug your MLFCrafter pipelines for better observability and troubleshooting.
 
 ## Logging Configuration
 
 ### Basic Logging Setup
 
 ```python
-from flowcraft import FlowChain
+from mlfcrafter import MLFChain
 import logging
 
 # Configure logging level
-pipeline = FlowChain(logging_level='INFO')
+pipeline = MLFChain(logging_level='INFO')
 
 # Or use Python's logging module
 logging.basicConfig(level=logging.INFO)
-pipeline = FlowChain()
+pipeline = MLFChain()
 ```
 
 ### Log Levels
 
-FlowCraft supports standard Python logging levels:
+MLFCrafter supports standard Python logging levels:
 
 ```python
 # DEBUG: Detailed information, typically of interest when diagnosing problems
-pipeline = FlowChain(logging_level='DEBUG')
+pipeline = MLFChain(logging_level='DEBUG')
 
 # INFO: General information about pipeline execution
-pipeline = FlowChain(logging_level='INFO')
+pipeline = MLFChain(logging_level='INFO')
 
 # WARNING: Something unexpected happened, but pipeline continues
-pipeline = FlowChain(logging_level='WARNING')
+pipeline = MLFChain(logging_level='WARNING')
 
 # ERROR: Serious problem occurred, pipeline may fail
-pipeline = FlowChain(logging_level='ERROR')
+pipeline = MLFChain(logging_level='ERROR')
 
 # CRITICAL: Very serious error, pipeline will likely fail
-pipeline = FlowChain(logging_level='CRITICAL')
+pipeline = MLFChain(logging_level='CRITICAL')
 ```
 
 ### Custom Log Format
@@ -50,15 +50,15 @@ formatter = logging.Formatter(
 )
 
 # File handler
-file_handler = logging.FileHandler('flowcraft.log')
+file_handler = logging.FileHandler('mlfcrafter.log')
 file_handler.setFormatter(formatter)
 
 # Console handler
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(formatter)
 
-# Configure FlowCraft logger
-logger = logging.getLogger('flowcraft')
+# Configure MLFCrafter logger
+logger = logging.getLogger('mlfcrafter')
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 logger.setLevel(logging.INFO)
@@ -68,10 +68,10 @@ logger.setLevel(logging.INFO)
 
 ### Automatic Logging
 
-FlowCraft automatically logs key events:
+MLFCrafter automatically logs key events:
 
 ```python
-pipeline = FlowChain(logging_level='INFO')
+pipeline = MLFChain(logging_level='INFO')
 pipeline.add(DataIngestCrafter(data))
 pipeline.add(CleanerCrafter())
 pipeline.add(ModelCrafter(algorithm='random_forest'))
@@ -88,7 +88,7 @@ result = pipeline.execute()
 ### Step-by-Step Logging
 
 ```python
-from flowcraft.crafters import DataIngestCrafter
+from mlfcrafter.crafters import DataIngestCrafter
 
 # Enable verbose logging for specific crafters
 ingester = DataIngestCrafter(
@@ -98,7 +98,7 @@ ingester = DataIngestCrafter(
     log_processing_time=True  # Log execution time
 )
 
-pipeline = FlowChain(logging_level='DEBUG')
+pipeline = MLFChain(logging_level='DEBUG')
 pipeline.add(ingester)
 ```
 
@@ -127,7 +127,7 @@ class CustomCrafter:
 ### Execution Time Tracking
 
 ```python
-pipeline = FlowChain(
+pipeline = MLFChain(
     track_performance=True,
     log_execution_times=True
 )
@@ -142,12 +142,12 @@ print(f"Step execution times: {result.step_times}")
 ### Memory Usage Monitoring
 
 ```python
-from flowcraft.utils import MemoryProfiler
+from mlfcrafter.utils import MemoryProfiler
 
 # Profile memory usage
 profiler = MemoryProfiler()
 
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add(DataIngestCrafter(data))
 
 with profiler:
@@ -160,7 +160,7 @@ print(f"Memory usage by step: {profiler.step_memory}")
 ### Resource Monitoring
 
 ```python
-pipeline = FlowChain(
+pipeline = MLFChain(
     monitor_resources=True,
     resource_check_interval=30  # seconds
 )
@@ -174,7 +174,7 @@ result = pipeline.execute()
 ### Data Profiling
 
 ```python
-from flowcraft.crafters import DataProfilerCrafter
+from mlfcrafter.crafters import DataProfilerCrafter
 
 profiler = DataProfilerCrafter(
     log_statistics=True,
@@ -183,7 +183,7 @@ profiler = DataProfilerCrafter(
     log_outliers=True
 )
 
-pipeline = (FlowChain()
+pipeline = (MLFChain()
     .add(DataIngestCrafter(data))
     .add(profiler)  # Will log comprehensive data profile
     .add(CleanerCrafter())
@@ -193,7 +193,7 @@ pipeline = (FlowChain()
 ### Data Validation Logging
 
 ```python
-from flowcraft.crafters import DataValidatorCrafter
+from mlfcrafter.crafters import DataValidatorCrafter
 
 validator = DataValidatorCrafter(
     schema={
@@ -208,7 +208,7 @@ validator = DataValidatorCrafter(
 ### Data Drift Detection
 
 ```python
-from flowcraft.crafters import DriftDetectorCrafter
+from mlfcrafter.crafters import DriftDetectorCrafter
 
 drift_detector = DriftDetectorCrafter(
     reference_data=reference_dataset,
@@ -225,11 +225,11 @@ pipeline.add(drift_detector)
 ### Exception Logging
 
 ```python
-from flowcraft.exceptions import FlowCraftError
+from mlfcrafter.exceptions import MLFCrafterError
 
 try:
     result = pipeline.execute()
-except FlowCraftError as e:
+except MLFCrafterError as e:
     logging.error(f"Pipeline failed: {e}")
     logging.error(f"Failed at step: {e.failed_step}")
     logging.error(f"Error details: {e.details}")
@@ -241,9 +241,9 @@ except FlowCraftError as e:
 ### Debug Mode
 
 ```python
-pipeline = FlowChain(debug_mode=True)
+pipeline = MLFChain(debug_mode=True)
 
-# In debug mode, FlowCraft will:
+# In debug mode, MLFCrafter will:
 # - Log all intermediate data shapes
 # - Save intermediate results
 # - Provide detailed error messages
@@ -254,7 +254,7 @@ pipeline = FlowChain(debug_mode=True)
 
 ```python
 # Step-by-step execution for debugging
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add(DataIngestCrafter(data))
 pipeline.add(CleanerCrafter())
 pipeline.add(ModelCrafter(algorithm='random_forest'))
@@ -334,7 +334,7 @@ class StructuredFormatter(logging.Formatter):
 # Configure structured logging
 handler = logging.StreamHandler()
 handler.setFormatter(StructuredFormatter())
-logger = logging.getLogger('flowcraft')
+logger = logging.getLogger('mlfcrafter')
 logger.addHandler(handler)
 ```
 
@@ -354,7 +354,7 @@ http_handler = logging.handlers.HTTPHandler(
     method='POST'
 )
 
-logger = logging.getLogger('flowcraft')
+logger = logging.getLogger('mlfcrafter')
 logger.addHandler(syslog_handler)
 logger.addHandler(http_handler)
 ```
@@ -370,10 +370,10 @@ json_formatter = jsonlogger.JsonFormatter(
     '%(asctime)s %(name)s %(levelname)s %(message)s'
 )
 
-elk_handler = logging.FileHandler('flowcraft-elk.log')
+elk_handler = logging.FileHandler('mlfcrafter-elk.log')
 elk_handler.setFormatter(json_formatter)
 
-logger = logging.getLogger('flowcraft')
+logger = logging.getLogger('mlfcrafter')
 logger.addHandler(elk_handler)
 ```
 
@@ -382,7 +382,7 @@ logger.addHandler(elk_handler)
 ### Email Alerts
 
 ```python
-from flowcraft.utils import AlertManager
+from mlfcrafter.utils import AlertManager
 
 alert_manager = AlertManager(
     email_config={
@@ -394,7 +394,7 @@ alert_manager = AlertManager(
     }
 )
 
-pipeline = FlowChain(alert_manager=alert_manager)
+pipeline = MLFChain(alert_manager=alert_manager)
 
 # Alerts will be sent for:
 # - Pipeline failures
@@ -409,7 +409,7 @@ alert_manager = AlertManager(
     slack_config={
         'webhook_url': 'https://hooks.slack.com/services/...',
         'channel': '#ml-alerts',
-        'username': 'FlowCraft Bot'
+        'username': 'MLFCrafter Bot'
     }
 )
 ```
@@ -434,8 +434,8 @@ alert_manager.add_condition(custom_alert_condition)
 import pandas as pd
 import re
 
-def parse_flowcraft_logs(log_file):
-    """Parse FlowCraft log files into structured data."""
+def parse_mlfcrafter_logs(log_file):
+    """Parse MLFCrafter log files into structured data."""
     logs = []
     with open(log_file, 'r') as f:
         for line in f:
@@ -450,7 +450,7 @@ def parse_flowcraft_logs(log_file):
     return pd.DataFrame(logs)
 
 # Analyze logs
-log_df = parse_flowcraft_logs('flowcraft.log')
+log_df = parse_mlfcrafter_logs('mlfcrafter.log')
 print(f"Error count: {len(log_df[log_df.level == 'ERROR'])}")
 ```
 
@@ -525,7 +525,7 @@ def log_data_summary(data, step_name):
 
 ```python
 # Always log these key metrics
-pipeline = FlowChain(
+pipeline = MLFChain(
     log_metrics=[
         'execution_time',
         'memory_usage',
@@ -544,7 +544,7 @@ import uuid
 # Track requests across distributed systems
 correlation_id = str(uuid.uuid4())
 
-pipeline = FlowChain(
+pipeline = MLFChain(
     correlation_id=correlation_id,
     log_correlation_id=True
 )
@@ -557,7 +557,7 @@ import logging.handlers
 
 # Rotate logs to prevent disk space issues
 handler = logging.handlers.RotatingFileHandler(
-    'flowcraft.log',
+    'mlfcrafter.log',
     maxBytes=10*1024*1024,  # 10MB
     backupCount=5
 )
@@ -569,7 +569,7 @@ handler = logging.handlers.RotatingFileHandler(
 
 ```python
 # Enable detailed performance logging
-pipeline = FlowChain(
+pipeline = MLFChain(
     logging_level='DEBUG',
     track_performance=True,
     profile_memory=True
@@ -612,5 +612,5 @@ scorer = ScorerCrafter(
 ## Next Steps
 
 - Explore [Basic Usage Examples](../examples/basic-usage.md)  
-- Check out [API Reference](../api/flowchain.md) for detailed configuration
+- Check out [API Reference](../api/mlfchain.md) for detailed configuration
 - Learn about [Pipeline Basics](pipeline-basics.md) for foundational concepts 

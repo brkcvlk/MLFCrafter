@@ -5,7 +5,7 @@ The **CleanerCrafter** handles missing values in datasets using multiple strateg
 ## Overview
 
 ```python
-from flowcraft import CleanerCrafter
+from mlfcrafter import CleanerCrafter
 
 crafter = CleanerCrafter(
     strategy="auto",
@@ -53,23 +53,23 @@ Fill value for numerical columns.
 ## Example Usage
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Automatic cleaning
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(CleanerCrafter(strategy="auto"))
 result = pipeline.run()
 
 # Mean imputation for numerical columns
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(CleanerCrafter(strategy="mean"))
 result = pipeline.run()
 
 # Custom fill values
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter("data.csv"))
 pipeline.add_crafter(CleanerCrafter(
     strategy="constant",

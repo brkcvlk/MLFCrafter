@@ -1,0 +1,108 @@
+name: 📚 Deploy Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'docs/**', 'mkdocs.yml', 'mlfcrafter/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'docs/**', 'mkdocs.yml', 'mlfcrafter/**' ]
+
+# Minimum required permissions for documentation deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Aynı anda sadece bir deployment'a izin ver
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-docs:
+    name: 📚 Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🛒 Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for git-revision-date-localized plugin
+        
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mkdocs-material mkdocs-gen-files mkdocs-literate-nav mkdocs-section-index
+        pip install mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin
+        
+    - name: 🔧 Setup Pages
+      uses: actions/configure-pages@v3
+      
+    - name: 🏗️ Build documentation
+      run: |
+        # Generate API reference
+        python docs/gen_ref_pages.py
+        
+        # Build with MkDocs
+        mkdocs build --clean --strict
+        
+    - name: 📤 Upload pages artifact
+      if: github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: site/
+
+  deploy-docs:
+    name: 🚀 Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.event_name == 'push'
+    
+    steps:
+    - name: 🚀 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+      
+  link-check:
+    name: 🔗 Check Documentation Links
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 🛒 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mkdocs-material mkdocs-gen-files mkdocs-literate-nav mkdocs-section-index
+        pip install mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin
+        
+    - name: 🏗️ Build documentation
+      run: |
+        python docs/gen_ref_pages.py
+        mkdocs build --clean --strict
+        
+    - name: 🔗 Check links
+      uses: lycheeverse/lychee-action@v1
+      with:
+        args: --verbose --no-progress 'site/**/*.html'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

@@ -1,15 +1,15 @@
 # Quick Start
 
-Get up and running with FlowCraft in just a few minutes! This guide will walk you through creating your first ML pipeline.
+Get up and running with MLFCrafter in just a few minutes! This guide will walk you through creating your first ML pipeline.
 
 ## Basic Example
 
-Here's a simple example that demonstrates FlowCraft's core functionality:
+Here's a simple example that demonstrates MLFCrafter's core functionality:
 
 ```python
 import pandas as pd
-from flowcraft import FlowChain
-from flowcraft.crafters import (
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import (
     DataIngestCrafter, 
     CleanerCrafter, 
     ScalerCrafter, 
@@ -29,7 +29,7 @@ data.to_csv(temp_file.name, index=False)
 temp_file.close()
 
 # Create pipeline with crafters
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy='drop'),
     ScalerCrafter(scaler_type='standard'),
@@ -50,23 +50,23 @@ print(f"Model: {results['model_name']}")
 ### 1. Import Required Components
 
 ```python
-from flowcraft import FlowChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ModelCrafter
 ```
 
-### 2. Create a FlowChain
+### 2. Create a MLFChain
 
-The `FlowChain` is the main orchestrator that manages your pipeline. You can initialize it with crafters or add them later:
+The `MLFChain` is the main orchestrator that manages your pipeline. You can initialize it with crafters or add them later:
 
 ```python
 # Option 1: Initialize with crafters
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy='auto'),
     ModelCrafter(model_name='random_forest')
 )
 
 # Option 2: Initialize empty and add crafters
-pipeline = FlowChain()
+pipeline = MLFChain()
 pipeline.add_crafter(DataIngestCrafter(data_path="data.csv"))
 pipeline.add_crafter(CleanerCrafter(strategy='auto'))
 ```
@@ -81,7 +81,7 @@ results = pipeline.run(target_column='target')
 
 ## Available Crafters
 
-FlowCraft provides the following built-in crafters:
+MLFCrafter provides the following built-in crafters:
 
 - **DataIngestCrafter**: Load data from CSV, Excel, or JSON files
 - **CleanerCrafter**: Handle missing values with various strategies
@@ -132,11 +132,11 @@ model = ModelCrafter(
 Here's a full pipeline with all crafters:
 
 ```python
-from flowcraft import FlowChain
-from flowcraft.crafters import *
+from mlfcrafter import MLFChain
+from mlfcrafter.crafters import *
 
 # Complete ML pipeline
-pipeline = FlowChain(
+pipeline = MLFChain(
     DataIngestCrafter(data_path="dataset.csv"),
     CleanerCrafter(strategy="median"),
     ScalerCrafter(scaler_type="standard"),

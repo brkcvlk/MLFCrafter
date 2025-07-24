@@ -1,8 +1,8 @@
 """
-FlowCraft Usage Examples
-========================
+MLFCrafter Usage Examples
+=========================
 
-This file demonstrates various ways to use FlowCraft for ML pipeline automation.
+This file demonstrates various ways to use MLFCrafter for ML pipeline automation.
 Run different examples by uncommenting the desired section.
 """
 
@@ -13,11 +13,11 @@ import numpy as np
 import pandas as pd
 from sklearn.datasets import make_classification
 
-from flowcraft import (
+from mlfcrafter import (
     CleanerCrafter,
     DataIngestCrafter,
     DeployCrafter,
-    FlowChain,
+    MLFChain,
     ModelCrafter,
     ScalerCrafter,
     ScorerCrafter,
@@ -57,7 +57,7 @@ def create_sample_data() -> str:
 
 
 def example_1_basic_pipeline() -> None:
-    """Basic FlowCraft pipeline with default settings"""
+    """Basic MLFCrafter pipeline with default settings"""
     print("=" * 60)
     print("EXAMPLE 1: Basic Pipeline")
     print("=" * 60)
@@ -68,7 +68,7 @@ def example_1_basic_pipeline() -> None:
 
     try:
         # Create pipeline
-        chain = FlowChain(
+        chain = MLFChain(
             DataIngestCrafter(data_path=data_path),
             CleanerCrafter(strategy="auto"),
             ScalerCrafter(scaler_type="minmax"),
@@ -98,7 +98,7 @@ def example_1_basic_pipeline() -> None:
 
 
 def example_2_custom_parameters() -> None:
-    """FlowCraft pipeline with custom parameters"""
+    """MLFCrafter pipeline with custom parameters"""
     print("=" * 60)
     print("EXAMPLE 2: Custom Parameters")
     print("=" * 60)
@@ -109,7 +109,7 @@ def example_2_custom_parameters() -> None:
 
     try:
         # Pipeline with custom parameters
-        chain = FlowChain(
+        chain = MLFChain(
             DataIngestCrafter(data_path=data_path, source_type="auto"),
             CleanerCrafter(strategy="mean", str_fill="unknown", int_fill=-999),
             ScalerCrafter(scaler_type="standard"),
@@ -146,7 +146,7 @@ def example_2_custom_parameters() -> None:
 
 
 def example_3_with_logging() -> None:
-    """FlowCraft pipeline with detailed logging"""
+    """MLFCrafter pipeline with detailed logging"""
     print("=" * 60)
     print("EXAMPLE 3: Pipeline with Logging")
     print("=" * 60)
@@ -159,7 +159,7 @@ def example_3_with_logging() -> None:
 
     try:
         # Simple pipeline to demonstrate logging
-        chain = FlowChain(
+        chain = MLFChain(
             DataIngestCrafter(data_path=data_path),
             CleanerCrafter(strategy="median"),
             ModelCrafter(
@@ -188,7 +188,7 @@ def example_4_model_loading() -> None:
 
     try:
         # Train and save model
-        chain = FlowChain(
+        chain = MLFChain(
             DataIngestCrafter(data_path=data_path),
             CleanerCrafter(strategy="auto"),
             ScalerCrafter(scaler_type="robust"),
@@ -222,7 +222,7 @@ def example_4_model_loading() -> None:
 
 
 if __name__ == "__main__":
-    print("FlowCraft Examples")
+    print("MLFCrafter Examples")
     print("Choose an example to run:")
     print("1. Basic pipeline (default settings)")
     print("2. Custom parameters")
@@ -235,5 +235,5 @@ if __name__ == "__main__":
     # example_3_with_logging()
     # example_4_model_loading()
 
-    print("\nTo run tests: python -m pytest tests/test_flowcraft.py -v")
+    print("\nTo run tests: python -m pytest tests/test_mlfcrafter.py -v")
     print("All examples completed!")
