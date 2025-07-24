@@ -1,4 +1,4 @@
-name: 🔖 Bump Version and Tag
+name: 🔖 PDM Version Bump and Release
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
           - minor
           - major
 
-# Required permissions for tagging and release creation
+# Required permissions for PDM version bump and release creation
 permissions:
   contents: write
 
@@ -23,34 +23,78 @@ jobs:
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v4
-
-      - name: 🔖 Bump version and create tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          default_bump: ${{ github.event.inputs.bump }}
-          create_annotated_tag: true
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install PDM and bump plugin
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdm pdm-bump
+
+      - name: 🔖 Bump version with PDM
+        id: bump-version
+        run: |
+          # Configure git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           
+          # Get current version from __init__.py
+          CURRENT_VERSION=$(python -c "import re; content=open('mlfcrafter/__init__.py').read(); print(re.search(r'__version__ = [\"\'](.*?)[\"\']', content).group(1))")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Bump version using PDM
+          pdm bump ${{ github.event.inputs.bump }}
+          
+          # Get new version from __init__.py  
+          NEW_VERSION=$(python -c "import re; content=open('mlfcrafter/__init__.py').read(); print(re.search(r'__version__ = [\"\'](.*?)[\"\']', content).group(1))")
+          echo "New version: $NEW_VERSION"
+          
+          # Commit version change
+          git add mlfcrafter/__init__.py
+          git commit -m "bump: version $CURRENT_VERSION → $NEW_VERSION"
+          
+          # Create tag
+          git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
+          
+          # Push changes and tag
+          git push origin main
+          git push origin "v$NEW_VERSION"
+          
+          # Set output for next step
+          echo "new_version=v$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "previous_version=v$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
       - name: 📝 Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          tag_name: ${{ steps.bump-version.outputs.new_version }}
+          name: Release ${{ steps.bump-version.outputs.new_version }}
           body: |
-            🎉 **What's Changed in ${{ steps.tag_version.outputs.new_tag }}**
+            🎉 **What's Changed in ${{ steps.bump-version.outputs.new_version }}**
             
-            Automated release created from version bump.
+            Version bumped using PDM from ${{ steps.bump-version.outputs.previous_version }} to ${{ steps.bump-version.outputs.new_version }}.
             Detailed changelog will be generated automatically.
             
-            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.tag_version.outputs.previous_tag }}...${{ steps.tag_version.outputs.new_tag }}
+            **Install this version:**
+            ```bash
+            pip install mlfcrafter==${{ steps.bump-version.outputs.new_version }}
+            ```
+            
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.bump-version.outputs.previous_version }}..${{ steps.bump-version.outputs.new_version }}
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 📝 Print new tag and release info
+      - name: 📝 Print version bump info
         run: |
-          echo "New tag: ${{ steps.tag_version.outputs.new_tag }}" 
-          echo "Previous tag: ${{ steps.tag_version.outputs.previous_tag }}"
-          echo "Release created automatically!" 
+          echo "✅ Version bump completed!"
+          echo "Previous: ${{ steps.bump-version.outputs.previous_version }}" 
+          echo "New: ${{ steps.bump-version.outputs.new_version }}"
+          echo "🚀 Release created - PyPI Publish and Release Notes workflows will trigger automatically!" 

@@ -171,3 +171,18 @@ dmypy.json
 # OS
 .DS_Store
 Thumbs.db 
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PDM
+.pdm-python
+.pdm.toml
+pdm.lock
+__pypackages__/ 
