@@ -1,4 +1,4 @@
-name: 🔖 PDM Version Bump and Release
+name: 🔖 Version Bump and Release
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
           - minor
           - major
 
-# Required permissions for PDM version bump and release creation
+# Required permissions for version bump and release creation
 permissions:
   contents: write
 
@@ -32,12 +32,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 📦 Install PDM and bump plugin
-        run: |
-          python -m pip install --upgrade pip
-          pip install pdm pdm-bump
-
-      - name: 🔖 Bump version with PDM
+      - name: 🔖 Bump version
         id: bump-version
         run: |
           # Configure git
@@ -48,12 +43,46 @@ jobs:
           CURRENT_VERSION=$(python -c "import re; content=open('mlfcrafter/__init__.py').read(); print(re.search(r'__version__ = [\"\'](.*?)[\"\']', content).group(1))")
           echo "Current version: $CURRENT_VERSION"
           
-          # Bump version using PDM
-          pdm bump ${{ github.event.inputs.bump }}
+          # Parse version components
+          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
           
-          # Get new version from __init__.py  
-          NEW_VERSION=$(python -c "import re; content=open('mlfcrafter/__init__.py').read(); print(re.search(r'__version__ = [\"\'](.*?)[\"\']', content).group(1))")
+          # Bump version based on input
+          case "${{ github.event.inputs.bump }}" in
+            "major")
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            "minor")
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            "patch")
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           echo "New version: $NEW_VERSION"
+          
+          # Update version in __init__.py
+          python -c "
+import re
+with open('mlfcrafter/__init__.py', 'r') as f:
+    content = f.read()
+    
+updated_content = re.sub(
+    r'__version__ = [\"\'](.*?)[\"\']',
+    f'__version__ = \"$NEW_VERSION\"',
+    content
+)
+
+with open('mlfcrafter/__init__.py', 'w') as f:
+    f.write(updated_content)
+"
           
           # Commit version change
           git add mlfcrafter/__init__.py
@@ -78,15 +107,14 @@ jobs:
           body: |
             🎉 **What's Changed in ${{ steps.bump-version.outputs.new_version }}**
             
-            Version bumped using PDM from ${{ steps.bump-version.outputs.previous_version }} to ${{ steps.bump-version.outputs.new_version }}.
-            Detailed changelog will be generated automatically.
+            Version bumped from v${{ steps.bump-version.outputs.previous_version }} to ${{ steps.bump-version.outputs.new_version }}.
             
             **Install this version:**
             ```bash
             pip install mlfcrafter==${{ steps.bump-version.outputs.new_version }}
             ```
             
-            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.bump-version.outputs.previous_version }}..${{ steps.bump-version.outputs.new_version }}
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.bump-version.outputs.previous_version }}..${{ steps.bump-version.outputs.new_version }}
           draft: false
           prerelease: false
         env:
@@ -95,6 +123,6 @@ jobs:
       - name: 📝 Print version bump info
         run: |
           echo "✅ Version bump completed!"
-          echo "Previous: ${{ steps.bump-version.outputs.previous_version }}" 
+          echo "Previous: v${{ steps.bump-version.outputs.previous_version }}" 
           echo "New: ${{ steps.bump-version.outputs.new_version }}"
-          echo "🚀 Release created - PyPI Publish and Release Notes workflows will trigger automatically!" 
+          echo "🚀 Release created - PyPI Publish workflow will trigger automatically!" 

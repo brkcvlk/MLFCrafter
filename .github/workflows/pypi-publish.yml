@@ -2,7 +2,7 @@ name: 📦 Publish to PyPI
 
 on:
   workflow_run:
-    workflows: ["🔖 PDM Version Bump and Release"]
+    workflows: ["🔖 Version Bump and Release"]
     types: [completed]
     branches: [main]
 
