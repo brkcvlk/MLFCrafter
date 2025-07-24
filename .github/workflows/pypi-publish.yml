@@ -11,66 +11,29 @@ permissions:
 
 jobs:
   build-and-publish:
-    name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
-    # Only repository owner can trigger PyPI publish
-    if: github.actor == github.repository_owner
-    
+
     steps:
-    - name: 🛒 Checkout source
-      uses: actions/checkout@v4
-      
-    - name: 🐍 Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        
-    - name: 📦 Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build twine
-        
-    - name: 🏗️ Build package
-      run: python -m build
-      
-    - name: ✅ Check distribution
-      run: twine check dist/*
-      
-    - name: 🚀 Publish to PyPI
-      if: secrets.PYPI_API_TOKEN != ''
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        echo "✅ PYPI_API_TOKEN found - Publishing to production PyPI"
-        twine upload dist/*
-        echo "🎉 Successfully published to PyPI!"
-      
-    - name: 🧪 Publish to TestPyPI (fallback)
-      if: secrets.PYPI_API_TOKEN == ''
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-        TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
-      run: |
-        echo "⚠️ PYPI_API_TOKEN not found - Attempting TestPyPI..."
-        if [ -n "$TWINE_PASSWORD" ]; then
-          twine upload dist/*
-          echo "✅ Published to TestPyPI: https://test.pypi.org/project/mlfcrafter/"
-          echo "🔧 Add PYPI_API_TOKEN secret to publish to production PyPI"
-        else
-          echo "❌ Neither PYPI_API_TOKEN nor TEST_PYPI_API_TOKEN found"
-          echo "📝 Package built successfully but not published"
-          echo "🔧 Add PyPI API token to Repository Secrets to enable publishing"
-          echo ""
-          echo "To add PyPI token:"
-          echo "1. Go to https://pypi.org/manage/account/token/"
-          echo "2. Create token for mlfcrafter"
-          echo "3. Add as PYPI_API_TOKEN in GitHub Repository Secrets"
-        fi
-      
-    - name: 📋 Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/ 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build package
+        run: |
+          python -m build
+
+      - name: Publish package
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python -m twine upload dist/* --skip-existing 
