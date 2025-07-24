@@ -1,6 +1,6 @@
 # MLFCrafter
 
-> **Simple, chainable ML pipeline automation for Python**
+> **ML Pipeline Automation Framework - Chain together data processing, model training, and deployment with minimal code**
 
 [![PyPI Version](https://img.shields.io/pypi/v/mlfcrafter?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/mlfcrafter/)
 [![Python Support](https://img.shields.io/pypi/pyversions/mlfcrafter?logo=python&logoColor=white)](https://pypi.org/project/mlfcrafter/)
@@ -23,7 +23,7 @@ Your support helps us continue developing and improving MLFCrafter for the ML co
 
 ## What is MLFCrafter?
 
-MLFCrafter is a Python library that simplifies machine learning pipeline creation through chainable "crafter" components. Build, train, and deploy ML models with minimal code and maximum flexibility.
+MLFCrafter is a Python framework that simplifies machine learning pipeline creation through chainable "crafter" components. Build, train, and deploy ML models with minimal code and maximum flexibility.
 
 ## Key Features
 

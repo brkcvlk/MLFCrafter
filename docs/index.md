@@ -2,7 +2,7 @@
   <h1 style="font-size: 3.5em; margin: 0.5em 0;">
     MLFCrafter
   </h1>
-  <h2>🚀 ML Pipeline Automation Made Simple</h2>
+  <h2>🚀 ML Pipeline Automation Framework</h2>
   <p>Build, train, and deploy machine learning models with minimal code through chainable "crafter" components.</p>
 </div>
 

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mlfcrafter"
 version = "0.1.0"
-description = "ML Pipeline Automation Made Simple - Chain together data processing, model training, and deployment with minimal code"
+description = "ML Pipeline Automation Framework - Chain together data processing, model training, and deployment with minimal code"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
