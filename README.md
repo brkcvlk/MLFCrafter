@@ -204,7 +204,7 @@ python example.py
 
 ## Documentation
 
-Complete documentation is available at [brkcvlk.github.io/mlfcrafter](https://brkcvlk.github.io/mlfcrafter/)
+Complete documentation is available at [mlfcrafter documentation](https://brkcvlk.github.io/mlfcrafter/)
 
 ## Contributing
 
