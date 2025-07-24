@@ -69,20 +69,22 @@ jobs:
           echo "New version: $NEW_VERSION"
           
           # Update version in __init__.py
-          python -c "
+          NEW_VERSION="$NEW_VERSION" python -c '
 import re
-with open('mlfcrafter/__init__.py', 'r') as f:
+import os
+new_version = os.environ["NEW_VERSION"]
+with open("mlfcrafter/__init__.py", "r") as f:
     content = f.read()
     
 updated_content = re.sub(
-    r'__version__ = [\"\'](.*?)[\"\']',
-    f'__version__ = \"$NEW_VERSION\"',
+    r"__version__ = [\"'"'"'](.*?)[\"'"'"']",
+    f"__version__ = \"{new_version}\"",
     content
 )
 
-with open('mlfcrafter/__init__.py', 'w') as f:
+with open("mlfcrafter/__init__.py", "w") as f:
     f.write(updated_content)
-"
+'
           
           # Commit version change
           git add mlfcrafter/__init__.py
