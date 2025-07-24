@@ -4,9 +4,14 @@ on:
   release:
     types: [created]
 
+# Required permissions for release updates
+permissions:
+  contents: write
+  metadata: read
+
 jobs:
   generate-release-notes:
-    name: 📝 Generate Release Notes
+    name: 📝 Generate Categorized Release Notes
     runs-on: ubuntu-latest
     # Only repository owner can generate release notes
     if: github.actor == github.repository_owner
@@ -15,117 +20,149 @@ jobs:
     - name: 🛒 Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Full history for changelog generation
-        
+        fetch-depth: 0  # Fetch full history for changelog generation
+
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        
-    - name: 📦 Install dependencies
+
+    - name: 📝 Generate Categorized Changelog
+      id: changelog  
       run: |
-        pip install gitpython>=3.1.0
+        # Get the previous tag
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+        CURRENT_TAG=${GITHUB_REF#refs/tags/}
         
-    - name: 📝 Generate changelog
-      id: changelog
-      run: |
-        python << 'EOF'
-        import git
-        import os
-        import re
-        from datetime import datetime
+        echo "Generating changelog from $PREVIOUS_TAG to $CURRENT_TAG"
         
-        repo = git.Repo('.')
+        # Get commits since last tag
+        if [ -n "$PREVIOUS_TAG" ]; then
+          COMMITS=$(git log --pretty=format:"%H|%s" ${PREVIOUS_TAG}..HEAD)
+        else
+          COMMITS=$(git log --pretty=format:"%H|%s")
+        fi
         
-        # Get the latest tag
-        if '${{ github.event.inputs.tag }}':
-            latest_tag = '${{ github.event.inputs.tag }}'
-        else:
-            latest_tag = str(repo.tags[-1])
-            
-        # Get previous tag for comparison
-        tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime, reverse=True)
-        if len(tags) > 1:
-            prev_tag = str(tags[1])
-            commits = list(repo.iter_commits(f'{prev_tag}..{latest_tag}'))
-        else:
-            commits = list(repo.iter_commits(latest_tag))
+        # Initialize changelog sections
+        FEATURES=""
+        BUGFIXES=""
+        DOCS=""
+        PERFORMANCE=""
+        REFACTOR=""
+        CHORE=""
+        BREAKING=""
+        OTHER=""
         
-        # Categorize commits
-        features = []
-        fixes = []
-        docs = []
-        chores = []
+        # Parse commits and categorize
+        echo "$COMMITS" | while IFS='|' read -r hash message; do
+          case "$message" in
+            feat*|feature*)
+              FEATURE_MSG=$(echo "$message" | sed 's/^feat[:(]*\s*//' | sed 's/^feature[:(]*\s*//')
+              FEATURES="$FEATURES\n- $FEATURE_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            fix*)
+              FIX_MSG=$(echo "$message" | sed 's/^fix[:(]*\s*//')
+              BUGFIXES="$BUGFIXES\n- $FIX_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            docs*)
+              DOC_MSG=$(echo "$message" | sed 's/^docs[:(]*\s*//')
+              DOCS="$DOCS\n- $DOC_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            perf*)
+              PERF_MSG=$(echo "$message" | sed 's/^perf[:(]*\s*//')
+              PERFORMANCE="$PERFORMANCE\n- $PERF_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            refactor*)
+              REFACTOR_MSG=$(echo "$message" | sed 's/^refactor[:(]*\s*//')
+              REFACTOR="$REFACTOR\n- $REFACTOR_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            chore*|ci*)
+              CHORE_MSG=$(echo "$message" | sed 's/^chore[:(]*\s*//' | sed 's/^ci[:(]*\s*//')
+              CHORE="$CHORE\n- $CHORE_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            *"BREAKING CHANGE"*|*"!"*)
+              BREAKING_MSG=$(echo "$message" | sed 's/!.*//')
+              BREAKING="$BREAKING\n- $BREAKING_MSG ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+            *)
+              OTHER="$OTHER\n- $message ([${hash:0:7}](https://github.com/${GITHUB_REPOSITORY}/commit/$hash))"
+              ;;
+          esac
+        done
         
-        for commit in commits:
-            message = commit.message.strip()
-            if message.startswith(('feat:', 'feature:')):
-                features.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
-            elif message.startswith(('fix:', 'bugfix:')):
-                fixes.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
-            elif message.startswith(('docs:', 'doc:')):
-                docs.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
-            elif message.startswith(('chore:', 'refactor:', 'style:', 'test:')):
-                chores.append(f"- {message.split(':', 1)[1].strip()} ({commit.hexsha[:8]})")
-            elif not message.startswith(('Merge', 'merge')):
-                chores.append(f"- {message} ({commit.hexsha[:8]})")
+        # Build changelog
+        CHANGELOG="## 🎉 What's Changed in $CURRENT_TAG\n\n"
         
-        # Generate release notes
-        release_notes = f"""# MLFCrafter {latest_tag}
+        if [ -n "$BREAKING" ]; then
+          CHANGELOG="$CHANGELOG### 💥 **BREAKING CHANGES**\n$BREAKING\n\n"
+        fi
         
-Released on {datetime.now().strftime('%Y-%m-%d')}
+        if [ -n "$FEATURES" ]; then
+          CHANGELOG="$CHANGELOG### ✨ **Features Added**\n$FEATURES\n\n"
+        fi
+        
+        if [ -n "$BUGFIXES" ]; then
+          CHANGELOG="$CHANGELOG### 🐛 **Bug Fixes**\n$BUGFIXES\n\n"
+        fi
+        
+        if [ -n "$PERFORMANCE" ]; then
+          CHANGELOG="$CHANGELOG### ⚡ **Performance Improvements**\n$PERFORMANCE\n\n"
+        fi
+        
+        if [ -n "$REFACTOR" ]; then
+          CHANGELOG="$CHANGELOG### 🔧 **Code Refactoring**\n$REFACTOR\n\n"
+        fi
+        
+        if [ -n "$DOCS" ]; then
+          CHANGELOG="$CHANGELOG### 📚 **Documentation**\n$DOCS\n\n"
+        fi
+        
+        if [ -n "$CHORE" ]; then
+          CHANGELOG="$CHANGELOG### 🏗️ **Maintenance & CI**\n$CHORE\n\n"
+        fi
+        
+        if [ -n "$OTHER" ]; then
+          CHANGELOG="$CHANGELOG### 📦 **Other Changes**\n$OTHER\n\n"
+        fi
+        
+        # Add footer
+        if [ -n "$PREVIOUS_TAG" ]; then
+          CHANGELOG="$CHANGELOG---\n\n**Full Changelog**: https://github.com/${GITHUB_REPOSITORY}/compare/$PREVIOUS_TAG...$CURRENT_TAG"
+        else
+          CHANGELOG="$CHANGELOG---\n\n**Full Changelog**: https://github.com/${GITHUB_REPOSITORY}/commits/$CURRENT_TAG"
+        fi
+        
+        # Save changelog to file
+        echo -e "$CHANGELOG" > changelog.md
+        echo "Generated changelog saved to changelog.md"
 
-## What's Changed
-"""
-        
-        if features:
-            release_notes += "\n### ✨ New Features\n" + "\n".join(features) + "\n"
-        
-        if fixes:
-            release_notes += "\n### 🐛 Bug Fixes\n" + "\n".join(fixes) + "\n"
-            
-        if docs:
-            release_notes += "\n### 📚 Documentation\n" + "\n".join(docs) + "\n"
-            
-        if chores:
-            release_notes += "\n### 🔧 Maintenance\n" + "\n".join(chores) + "\n"
-        
-        release_notes += f"""
-## Installation
-
-```bash
-pip install mlfcrafter=={latest_tag.lstrip('v')}
-```
-
-## Full Changelog
-
-**Full Changelog**: https://github.com/${{{{ github.repository }}}}/compare/{prev_tag if len(tags) > 1 else ''}...{latest_tag}
-"""
-        
-        # Save to file
-        with open('release_notes.md', 'w') as f:
-            f.write(release_notes)
-            
-        print("Release notes generated successfully!")
-        EOF
-        
-    - name: 📋 Upload release notes
-      uses: actions/upload-artifact@v4
+    - name: 📋 Update Release Notes
+      uses: actions/github-script@v7
       with:
-        name: release-notes
-        path: release_notes.md
-        
-    - name: 🚀 Update release
-      if: github.event_name == 'release'
-      uses: actions/github-script@v6
-      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const fs = require('fs');
-          const releaseNotes = fs.readFileSync('release_notes.md', 'utf8');
+          const changelog = fs.readFileSync('changelog.md', 'utf8');
           
+          // Get current release
+          const release = await github.rest.repos.getReleaseByTag({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag: context.ref.replace('refs/tags/', '')
+          });
+          
+          // Update release with new body
           await github.rest.repos.updateRelease({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            release_id: context.payload.release.id,
-            body: releaseNotes
-          }); 
+            release_id: release.data.id,
+            body: changelog
+          });
+          
+          console.log('✅ Release notes updated with categorized changelog!');
+
+    - name: 📄 Upload changelog artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: changelog-${{ github.ref_name }}
+        path: changelog.md 

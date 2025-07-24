@@ -13,6 +13,11 @@ on:
           - minor
           - major
 
+# Required permissions for tagging
+permissions:
+  contents: write
+  metadata: read
+
 jobs:
   bump-version:
     runs-on: ubuntu-latest
@@ -26,6 +31,27 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: ${{ github.event.inputs.bump }}
+          create_annotated_tag: true
+          
+      - name: 📝 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: |
+            🎉 **What's Changed in ${{ steps.tag_version.outputs.new_tag }}**
+            
+            Automated release created from version bump.
+            Detailed changelog will be generated automatically.
+            
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.tag_version.outputs.previous_tag }}...${{ steps.tag_version.outputs.new_tag }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 📝 Print new tag
-        run: echo "New tag is ${{ steps.tag_version.outputs.new_tag }}" 
+      - name: 📝 Print new tag and release info
+        run: |
+          echo "New tag: ${{ steps.tag_version.outputs.new_tag }}" 
+          echo "Previous tag: ${{ steps.tag_version.outputs.previous_tag }}"
+          echo "Release created automatically!" 
