@@ -1,0 +1,42 @@
+name: 🔼 Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      part:
+        description: "Which part to bump? (patch, minor, major)"
+        required: true
+        default: "patch"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    if: github.repository == 'brkcvlk/MLFCrafter'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install bump2version
+        run: pip install bump2version
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "action@github.com"
+
+      - name: Bump version
+        run: |
+          bump2version ${{ github.event.inputs.part }}
+
+      - name: Push changes with tags
+        run: git push --follow-tags

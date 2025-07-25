@@ -1,7 +1,9 @@
-name: 📦 Draft Release Notes
+name: 📝 Draft Release Notes
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["🔼 Bump Version"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -9,8 +11,11 @@ permissions:
 
 jobs:
   update_release_draft:
+    if: github.repository == 'brkcvlk/MLFCrafter'
     runs-on: ubuntu-latest
+
     steps:
       - uses: release-drafter/release-drafter@v6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        

@@ -10,8 +10,6 @@ from .crafters import (
 from .flow_chain import MLFChain
 from .utils import setup_logger
 
-__version__ = "0.1.1"
-
 # Setup default logger when MLFCrafter is imported
 _default_logger = setup_logger()
 

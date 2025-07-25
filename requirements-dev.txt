@@ -17,3 +17,8 @@ mkdocs-literate-nav>=0.6.0
 mkdocs-section-index>=0.3.0
 mkdocs-git-revision-date-localized-plugin>=1.2.0
 mkdocs-minify-plugin>=0.8.0
+
+# Versioning
+bump2version>=1.0.1  # For version management
+# Note: This is a development dependency, not needed in production
+# It is used to automate version updates in pyproject.toml and other files
