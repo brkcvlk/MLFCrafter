@@ -43,6 +43,9 @@ jobs:
 
       - name: 📦 Install PDM
         run: pip install pdm
+      
+      - name: 🔌 Install pdm-bump plugin
+        run: pdm plugin add pdm-bump
 
       - name: ⚙️ Configure Git
         run: |
