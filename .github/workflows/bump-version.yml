@@ -33,35 +33,35 @@ jobs:
 
       - name: Install PDM
         run: pip install pdm
-      
-      - name: Install dependencies
-        run: pdm install
 
       - name: Install dependencies with PDM (including dev)
         run: pdm install -d
+
+      - name: Install bump2version
+        run: pip install bump2version
 
       - name: Get old version
         id: get_old_version
         run: |
           chmod +x scripts/get_version.sh
-          OLD_VERSION=$(scripts/get_version.sh)
+          OLD_VERSION=$(./scripts/get_version.sh)
           echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_OUTPUT
           echo "Old version: $OLD_VERSION"
 
-      - name: Bump version
-        run: |
-          pdm version ${{ inputs.version_type }}
+      - name: Bump version and create tag
         id: bump
+        run: |
+          bump2version ${{ inputs.version_type }} --allow-dirty --tag
 
       - name: Get new version
         id: get_new_version
         run: |
           chmod +x scripts/get_version.sh
-          NEW_VERSION=$(scripts/get_version.sh)
+          NEW_VERSION=$(./scripts/get_version.sh)
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
 
-      - name: Create bump branch and push
+      - name: Create bump branch and push (with tags)
         run: |
           BRANCH_NAME="bump-v${{ steps.get_new_version.outputs.NEW_VERSION }}"
           git config user.name "github-actions[bot]"
@@ -69,7 +69,7 @@ jobs:
           git checkout -b $BRANCH_NAME
           git add .
           git commit -m "🔖 Bump version to v${{ steps.get_new_version.outputs.NEW_VERSION }}"
-          git push --set-upstream origin $BRANCH_NAME
+          git push --set-upstream origin $BRANCH_NAME --tags
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
