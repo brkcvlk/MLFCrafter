@@ -1,9 +1,9 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - closed
 
 permissions:
   contents: write
@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   create_release_draft:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v6
