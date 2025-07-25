@@ -2,7 +2,6 @@ name: 📦 Draft Release Notes
 
 on:
   workflow_dispatch:
-  workflow_call:
 
 permissions:
   contents: write
@@ -10,7 +9,6 @@ permissions:
 
 jobs:
   update_release_draft:
-    if: github.repository == 'brkcvlk/MLFCrafter'
     runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v6.1.0

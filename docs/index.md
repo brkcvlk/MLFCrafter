@@ -188,8 +188,6 @@ print(f"💾 Model Saved: {results['deployment_successful']}")
 
 ---
 
-*Documentation last updated: {{ git_revision_date_localized }}*
-
 <div align="center">
   <p><strong>Ready to build your first ML pipeline?</strong></p>
   <a href="getting-started/installation/" class="md-button md-button--primary">Get Started</a>
