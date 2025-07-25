@@ -116,7 +116,7 @@ jobs:
             - [ ] Verify PyPI deployment
             - [ ] Check release notes generation
           base: main
-          delete-branch: true
+          delete-branch: false
 
   auto-release:
     needs: bump-version
