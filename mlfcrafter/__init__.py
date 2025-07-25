@@ -9,7 +9,6 @@ from .crafters import (
 )
 from .flow_chain import MLFChain
 from .utils import setup_logger
-from . import __version__
 
 __version__ = "0.1.0"
 

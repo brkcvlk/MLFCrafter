@@ -43,7 +43,8 @@ jobs:
       - name: Get old version
         id: get_old_version
         run: |
-          OLD_VERSION=$(python -c "import mlfcrafter; print(mlfcrafter.__version__)")
+          chmod +x scripts/get_version.sh
+          OLD_VERSION=$(scripts/get_version.sh)
           echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_OUTPUT
           echo "Old version: $OLD_VERSION"
 
@@ -55,7 +56,8 @@ jobs:
       - name: Get new version
         id: get_new_version
         run: |
-          NEW_VERSION=$(python -c "import mlfcrafter; print(mlfcrafter.__version__)")
+          chmod +x scripts/get_version.sh
+          NEW_VERSION=$(scripts/get_version.sh)
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
 
