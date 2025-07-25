@@ -1,7 +1,22 @@
-name: Version Bump (PDM)
+name: 🔖 Version Bump & Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      auto_release:
+        description: 'Auto-merge PR and create release'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -10,53 +25,154 @@ permissions:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.create_pr.outputs.pull-request-number }}
+      new_version: ${{ steps.get_new_version.outputs.NEW_VERSION }}
+      old_version: ${{ steps.get_old_version.outputs.OLD_VERSION }}
 
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install PDM
-        run: |
-          pip install pdm
+      - name: 📦 Install PDM
+        run: pip install pdm
 
-      - name: Configure Git
+      - name: ⚙️ Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Get old version
-        id: old
+      - name: 📊 Get old version
+        id: get_old_version
         run: |
-          echo "OLD_VERSION=$(pdm show --version)" >> $GITHUB_ENV
+          OLD_VERSION=$(pdm show --version)
+          echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_OUTPUT
+          echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
+          echo "Current version: $OLD_VERSION"
 
-      - name: Bump version (patch)
+      - name: ⬆️ Bump version (${{ inputs.version_type }})
         run: |
-          pdm bump patch
+          pdm bump ${{ inputs.version_type }}
+          echo "Version bumped using: pdm bump ${{ inputs.version_type }}"
 
-      - name: Get new version
-        id: new
+      - name: 📊 Get new version
+        id: get_new_version
         run: |
-          echo "NEW_VERSION=$(pdm show --version)" >> $GITHUB_ENV
+          NEW_VERSION=$(pdm show --version)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "New version: $NEW_VERSION"
 
-      - name: Create new branch and push
+      - name: 📝 Show version changes
         run: |
-          git checkout -b bump-v$NEW_VERSION
-          git add pyproject.toml
-          git commit -m "bump: version $OLD_VERSION → $NEW_VERSION"
-          git push origin bump-v$NEW_VERSION
+          echo "::notice::Version bump: ${{ env.OLD_VERSION }} → ${{ env.NEW_VERSION }}"
+          git diff pyproject.toml
+          git diff mlfcrafter/__init__.py
 
-      - name: Create Pull Request
+      - name: 🌿 Create version bump branch
+        run: |
+          BRANCH_NAME="bump-v${{ env.NEW_VERSION }}"
+          git checkout -b "$BRANCH_NAME"
+          git add -A
+          git commit -m "🔖 bump: version ${{ env.OLD_VERSION }} → ${{ env.NEW_VERSION }}"
+          git push origin "$BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: 📋 Create Pull Request
+        id: create_pr
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "bump: version ${{ env.OLD_VERSION }} → ${{ env.NEW_VERSION }}"
+          commit-message: "🔖 bump: version ${{ env.OLD_VERSION }} → ${{ env.NEW_VERSION }}"
           branch: bump-v${{ env.NEW_VERSION }}
           title: "🔖 Version Bump: v${{ env.NEW_VERSION }}"
           body: |
-            This PR bumps the version from `${{ env.OLD_VERSION }}` to `${{ env.NEW_VERSION }}` using `pdm bump`.
+            ## 🔖 Version Bump: `${{ env.OLD_VERSION }}` → `${{ env.NEW_VERSION }}`
+            
+            This PR bumps the version using `pdm bump ${{ inputs.version_type }}`.
+            
+            ### Changes Made:
+            - ⬆️ Version bumped from `${{ env.OLD_VERSION }}` to `${{ env.NEW_VERSION }}`
+            - 📝 Updated `pyproject.toml`
+            - 📝 Updated `mlfcrafter/__init__.py`
+            
+            ### What happens next:
+            ${{ inputs.auto_release && '✅ **Auto-release enabled**: This PR will be auto-merged and a release will be created automatically.' || '🔄 **Manual review required**: Please review and merge this PR. After merging, create a release manually or run the release workflow.' }}
+            
+            ### Release checklist:
+            - [ ] Review version bump changes
+            - [ ] Merge this PR
+            - [ ] Create GitHub release (triggers PyPI publish)
+            - [ ] Verify PyPI deployment
+            - [ ] Check release notes generation
           base: main
+          delete-branch: true
+
+  auto-release:
+    needs: bump-version
+    runs-on: ubuntu-latest
+    if: ${{ inputs.auto_release == true && needs.bump-version.outputs.pr_number }}
+    
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⏳ Wait for PR checks to complete
+        run: |
+          echo "Waiting 30 seconds for PR checks to start..."
+          sleep 30
+
+      - name: ✅ Auto-merge PR
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ needs.bump-version.outputs.pr_number }}
+          merge-method: squash
+
+      - name: ⏳ Wait for PR to be merged
+        run: |
+          echo "Waiting for PR to be auto-merged..."
+          sleep 60
+
+      - name: 🏷️ Create Git Tag and Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEW_VERSION="${{ needs.bump-version.outputs.new_version }}"
+          OLD_VERSION="${{ needs.bump-version.outputs.old_version }}"
+          
+          # Switch to main and pull latest
+          git checkout main
+          git pull origin main
+          
+          # Create and push tag
+          git tag -a "v$NEW_VERSION" -m "🔖 Release v$NEW_VERSION"
+          git push origin "v$NEW_VERSION"
+          
+          # Create GitHub Release
+          gh release create "v$NEW_VERSION" \
+            --title "🚀 Release v$NEW_VERSION" \
+            --notes "## 🔖 Version $NEW_VERSION
+
+          This release was automatically created from version bump $OLD_VERSION → $NEW_VERSION.
+
+          ### 🚀 What's Changed
+          - Version bumped from \`$OLD_VERSION\` to \`$NEW_VERSION\`
+
+          ### 📦 Installation
+          \`\`\`bash
+          pip install mlfcrafter==$NEW_VERSION
+          \`\`\`
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v$OLD_VERSION...v$NEW_VERSION" \
+            --latest
+
+          echo "✅ Release v$NEW_VERSION created successfully!"
+          echo "🚀 This will trigger PyPI publishing and release notes generation."

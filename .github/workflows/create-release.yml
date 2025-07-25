@@ -1,0 +1,124 @@
+name: 🏷️ Auto-Create Release from Version Bump
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'mlfcrafter/__init__.py'
+      - 'pyproject.toml'
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit to compare
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 📦 Install PDM
+        run: pip install pdm
+
+      - name: 🔍 Check if this is a version bump commit
+        id: check_version_bump
+        run: |
+          # Check if commit message contains version bump pattern
+          COMMIT_MSG=$(git log -1 --pretty=%s)
+          echo "Commit message: $COMMIT_MSG"
+          
+          if [[ "$COMMIT_MSG" =~ ^🔖.*bump:.*version.*→.* ]] || [[ "$COMMIT_MSG" =~ ^bump:.*version.*→.* ]]; then
+            echo "Version bump commit detected!"
+            echo "is_version_bump=true" >> $GITHUB_OUTPUT
+            
+            # Extract version from commit message or get current version
+            CURRENT_VERSION=$(pdm show --version)
+            echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+            echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+            
+            # Check if tag already exists
+            if git rev-parse "v$CURRENT_VERSION" >/dev/null 2>&1; then
+              echo "Tag v$CURRENT_VERSION already exists, skipping release creation"
+              echo "tag_exists=true" >> $GITHUB_OUTPUT
+            else
+              echo "Tag v$CURRENT_VERSION does not exist, will create release"
+              echo "tag_exists=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "Not a version bump commit, skipping"
+            echo "is_version_bump=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🏷️ Create Git Tag and GitHub Release
+        if: steps.check_version_bump.outputs.is_version_bump == 'true' && steps.check_version_bump.outputs.tag_exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.check_version_bump.outputs.current_version }}"
+          
+          echo "Creating tag and release for version: $VERSION"
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create and push tag
+          git tag -a "v$VERSION" -m "🔖 Release v$VERSION"
+          git push origin "v$VERSION"
+          
+          # Get previous version for changelog
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+          
+          # Create release notes
+          if [ -n "$PREVIOUS_TAG" ]; then
+            CHANGELOG_LINK="**Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...v$VERSION"
+          else
+            CHANGELOG_LINK="**Full Changelog**: https://github.com/${{ github.repository }}/commits/v$VERSION"
+          fi
+          
+          # Create GitHub Release
+          gh release create "v$VERSION" \
+            --title "🚀 Release v$VERSION" \
+            --notes "## 🔖 Release v$VERSION
+
+          This release was automatically created after version bump was merged to main branch.
+
+          ### 📦 Installation
+          \`\`\`bash
+          pip install mlfcrafter==$VERSION
+          \`\`\`
+
+          ### 🚀 What's New
+          Check the commit history and pull requests for detailed changes in this version.
+
+          $CHANGELOG_LINK
+
+          ---
+          🤖 *This release was created automatically. Detailed release notes will be generated shortly by the release notes workflow.*" \
+            --latest
+
+          echo "✅ Release v$VERSION created successfully!"
+          echo "🚀 This will now trigger:"
+          echo "   → PyPI publishing workflow"
+          echo "   → Release notes generation workflow"
+
+      - name: ℹ️ Release Creation Summary
+        if: always()
+        run: |
+          if [[ "${{ steps.check_version_bump.outputs.is_version_bump }}" == "true" ]]; then
+            if [[ "${{ steps.check_version_bump.outputs.tag_exists }}" == "true" ]]; then
+              echo "ℹ️ Version bump detected but release already exists for v${{ steps.check_version_bump.outputs.current_version }}"
+            else
+              echo "✅ Version bump detected and release created for v${{ steps.check_version_bump.outputs.current_version }}"
+            fi
+          else
+            echo "ℹ️ No version bump detected in this commit - no release created"
+          fi 
