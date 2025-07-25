@@ -15,5 +15,8 @@ categories:
     labels:
       - "docs"
 
+template: |
+  ## Changes
+  $CHANGES
 change-template: '- $TITLE (#$NUMBER)'
 no-changes-template: 'No significant changes.'
