@@ -30,35 +30,3 @@ jobs:
           PDM_PUBLISH_USERNAME: __token__
           PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: pdm publish
-name: 📦 Publish to PyPI
-
-on:
-  workflow_dispatch:
-  workflow_call:
-
-permissions:
-  contents: read
-
-jobs:
-  build-and-publish:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install PDM
-        run: pip install pdm
-
-      - name: Build with PDM
-        run: pdm build
-
-      - name: Publish to PyPI
-        env:
-          PDM_PUBLISH_USERNAME: __token__
-          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: pdm publish
