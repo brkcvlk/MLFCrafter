@@ -1,24 +1,29 @@
-name: 🔼 Bump Version
+name: 🔖 Bump Version & Create PR
 
 on:
   workflow_dispatch:
     inputs:
-      part:
-        description: "Which part to bump? (patch, minor, major)"
+      version_type:
+        description: 'Version bump type'
         required: true
-        default: "patch"
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  bump:
-    if: github.repository == 'brkcvlk/MLFCrafter'
+  bump-version:
     runs-on: ubuntu-latest
-
+    outputs:
+      new_version: ${{ steps.get_new_version.outputs.NEW_VERSION }}
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -29,14 +34,38 @@ jobs:
       - name: Install bump2version
         run: pip install bump2version
 
-      - name: Configure Git
+      - name: Get old version
+        id: get_old_version
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "action@github.com"
+          OLD_VERSION=$(python -c "import mlfcrafter; print(mlfcrafter.__version__)")
+          echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_OUTPUT
+          echo "Old version: $OLD_VERSION"
 
       - name: Bump version
         run: |
-          bump2version ${{ github.event.inputs.part }}
+          bump2version ${{ inputs.version_type }} --allow-dirty --no-tag
+        id: bump
 
-      - name: Push changes with tags
-        run: git push --follow-tags
+      - name: Get new version
+        id: get_new_version
+        run: |
+          NEW_VERSION=$(python -c "import mlfcrafter; print(mlfcrafter.__version__)")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Create bump branch and push
+        run: |
+          BRANCH_NAME="bump-v${{ steps.get_new_version.outputs.NEW_VERSION }}"
+          git checkout -b $BRANCH_NAME
+          git push --set-upstream origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bump-v${{ steps.get_new_version.outputs.NEW_VERSION }}
+          title: "🔖 Bump version to v${{ steps.get_new_version.outputs.NEW_VERSION }}"
+          body: |
+            This PR bumps version from ${{ steps.get_old_version.outputs.OLD_VERSION }} to ${{ steps.get_new_version.outputs.NEW_VERSION }}.
+          base: main
+          delete-branch: true

@@ -1,33 +1,31 @@
-name: 🚀 Publish to PyPI
+name: Publish to PyPI
 
 on:
-  workflow_run:
-    workflows: ["📝 Draft Release Notes"]
-    types: [completed]
+  release:
+    types:
+      - published
 
 permissions:
   contents: read
 
 jobs:
   publish:
-    if: github.repository == 'brkcvlk/MLFCrafter'
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install PDM
-        run: |
-          curl -sSL https://pdm-project.org/install-pdm.py | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: pip install pdm
 
-      - name: Build and Publish
-        env:
-          PDM_PUBLISH_USERNAME: __token__
-          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Configure PyPI token
         run: |
-          pdm publish --username "$PDM_PUBLISH_USERNAME" --password "$PDM_PUBLISH_PASSWORD"
+          pdm config pypi.username __token__
+          pdm config pypi.password ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Publish package
+        run: pdm publish
