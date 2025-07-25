@@ -61,16 +61,17 @@ MLFCrafter uses a **context-based pipeline architecture** where each crafter:
 3. **Returns** an updated context for the next crafter
 
 ```
-📊 DataIngestCrafter → 🧹 CleanerCrafter → ⚖️ ScalerCrafter → 🤖 ModelCrafter → 📊 ScorerCrafter → 🚀 DeployCrafter
+📊 DataIngestCrafter → 🧹 CleanerCrafter → CategoricalCrafter  → ⚖️ ScalerCrafter → 🤖 ModelCrafter → 📊 ScorerCrafter → 🚀 DeployCrafter
 ```
 
 **Pipeline Flow:**
 1. **DataIngestCrafter**: Load data from CSV/Excel/JSON files
 2. **CleanerCrafter**: Handle missing values with various strategies  
-3. **ScalerCrafter**: Normalize numerical features (MinMax/Standard/Robust)
-4. **ModelCrafter**: Train ML models (Random Forest, XGBoost, Logistic Regression)
-5. **ScorerCrafter**: Calculate performance metrics (Accuracy, Precision, Recall, F1)
-6. **DeployCrafter**: Save trained models with metadata for deployment
+3. **CategoricalCrafter**: Converts categorical variables into numerical data.
+4. **ScalerCrafter**: Normalize numerical features (MinMax/Standard/Robust)
+5. **ModelCrafter**: Train ML models (Random Forest, XGBoost, Logistic Regression)
+6. **ScorerCrafter**: Calculate performance metrics (Accuracy, Precision, Recall, F1)
+7. **DeployCrafter**: Save trained models with metadata for deployment
 
 ## 🛠️ Available Crafters
 
@@ -78,6 +79,7 @@ MLFCrafter uses a **context-based pipeline architecture** where each crafter:
 |---------|---------|--------------|
 | **[DataIngestCrafter](api/crafters/data-ingest-crafter.md)** | Data loading | CSV, Excel, JSON with auto-detection |
 | **[CleanerCrafter](api/crafters/cleaner-crafter.md)** | Data cleaning | Multiple missing value strategies |
+| **[CategoricalCrafter](api/crafters/categorical-crafter.md)** | Feature encoding | One-Hot Encoding, Label Encoding |
 | **[ScalerCrafter](api/crafters/scaler-crafter.md)** | Feature scaling | MinMax, Standard, Robust scalers |
 | **[ModelCrafter](api/crafters/model-crafter.md)** | Model training | RF, XGBoost, LogReg with hyperparameters |
 | **[ScorerCrafter](api/crafters/scorer-crafter.md)** | Performance metrics | Accuracy, Precision, Recall, F1 |
@@ -103,6 +105,7 @@ import pandas as pd
 chain = MLFChain(
     DataIngestCrafter(data_path="your_data.csv"),
     CleanerCrafter(strategy="mean"),           # Handle missing values
+    CategoricalCrafter(encoder_type="onehot"), # Convert categorical values to numerical
     ScalerCrafter(scaler_type="standard"),     # Normalize features  
     ModelCrafter(model_name="random_forest"),  # Train model
     ScorerCrafter(),                          # Calculate metrics

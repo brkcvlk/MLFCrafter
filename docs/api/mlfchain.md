@@ -128,6 +128,11 @@ The `run()` method returns a context dictionary containing all pipeline results.
 - `scaled_columns` (list): Names of columns that were scaled
 - `scaler_type` (str): Type of scaler used
 
+### Encoding Results
+- `encoder`: Fitted encoder object for future use
+- `encoded_columns` (list): Names of columns that were encoded
+- `encoder_type` (str): Type of encoder used
+
 ### Scoring Results
 - `scores` (dict): Dictionary containing calculated metrics
 
@@ -182,6 +187,7 @@ from mlfcrafter.crafters import *
 pipeline = MLFChain(
     DataIngestCrafter(data_path="data.csv"),
     CleanerCrafter(strategy="auto"),
+    CategoricalCrafter(encoder_type="onehot")
     ScalerCrafter(scaler_type="standard"),
     ModelCrafter(model_name="random_forest"),
     ScorerCrafter(),

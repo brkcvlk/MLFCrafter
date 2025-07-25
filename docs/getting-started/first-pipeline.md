@@ -47,11 +47,14 @@ pipeline = MLFChain(
     
     # Step 2: Handle missing values (though Iris has none)
     CleanerCrafter(strategy="auto"),
+
+    # Step 3 : Encode categorica features for Scaler Crafter 
+    CategoricalCrafter(encoder_type="onehot")
     
-    # Step 3: Scale features for better model performance
+    # Step 4: Scale features for better model performance
     ScalerCrafter(scaler_type="standard"),
     
-    # Step 4: Train the model
+    # Step 5: Train the model
     ModelCrafter(
         model_name="random_forest",
         model_params={
@@ -63,10 +66,10 @@ pipeline = MLFChain(
         stratify=True
     ),
     
-    # Step 5: Evaluate model performance
+    # Step 6: Evaluate model performance
     ScorerCrafter(metrics=["accuracy", "precision", "recall", "f1"]),
     
-    # Step 6: Save the trained model
+    # Step 7: Save the trained model
     DeployCrafter(
         model_path="iris_classifier.joblib",
         include_scaler=True,
@@ -178,7 +181,7 @@ Here's the complete pipeline in one block:
 import pandas as pd
 import tempfile
 from sklearn.datasets import load_iris
-from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter
+from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ScalerCrafter, ModelCrafter, ScorerCrafter, DeployCrafter, CategoricalCrafter
 
 # Load and prepare data
 iris = load_iris()
@@ -194,6 +197,7 @@ temp_file.close()
 pipeline = MLFChain(
     DataIngestCrafter(data_path=temp_file.name),
     CleanerCrafter(strategy="auto"),
+    CategoricalCrafter(encoder_type="onehot")
     ScalerCrafter(scaler_type="standard"),
     ModelCrafter(
         model_name="random_forest",
