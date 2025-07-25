@@ -3,6 +3,7 @@ from .crafters import (
     DataIngestCrafter,
     DeployCrafter,
     ModelCrafter,
+    CategoricalCrafter,
     ScalerCrafter,
     ScorerCrafter,
 )
@@ -23,4 +24,5 @@ __all__ = [
     "ScorerCrafter",
     "DeployCrafter",
     "setup_logger",
+    "CategoricalCrafter",
 ]

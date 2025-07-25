@@ -4,6 +4,7 @@ from .deploy_crafter import DeployCrafter
 from .model_crafter import ModelCrafter
 from .scaler_crafter import ScalerCrafter
 from .scorer_crafter import ScorerCrafter
+from .categorical_crafter import CategoricalCrafter
 
 __all__ = [
     "DataIngestCrafter",
@@ -12,4 +13,5 @@ __all__ = [
     "ModelCrafter",
     "ScorerCrafter",
     "DeployCrafter",
+    "CategoricalCrafter",
 ]
