@@ -1,96 +1,34 @@
-name: 🔖 Version Bump & Create PR
+name: 🔖 Bump Version
 
 on:
   workflow_dispatch:
-    inputs:
-      version_type:
-        description: 'Version bump type'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-
-permissions:
-  contents: write
-  pull-requests: write
 
 jobs:
-  bump-version:
+  bump:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 🛒 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: 📦 Install PDM
+      - name: Install PDM
         run: pip install pdm
 
-      - name: 🔌 Install pdm-bump plugin
-        run: pdm plugin add pdm-bump
-
-      - name: ⚙️ Configure Git
+      - name: Bump patch version
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          pdm version patch
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -am "🔖 bump: patch version"
+          git push
 
-      - name: 📊 Get old version
-        id: get_old_version
-        run: |
-          OLD_VERSION=$(pdm show --version)
-          echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_OUTPUT
-          echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
-          echo "Current version: $OLD_VERSION"
-
-      - name: ⬆️ Bump version (${{ inputs.version_type }})
-        run: |
-          pdm bump ${{ inputs.version_type }}
-      - name: 🔄 Update __init__.py version
-        run: |
-          NEW_VERSION=$(pdm show --version)
-          FILE="mlfcrafter/__init__.py"
-          sed -i "s/^__version__ = .*/__version__ = '${NEW_VERSION}'/" "$FILE"
-          git add "$FILE"
-
-      - name: 📊 Get new version
-        id: get_new_version
-        run: |
-          NEW_VERSION=$(pdm show --version)
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "New version: $NEW_VERSION"
-
-      - name: 🌿 Create version bump branch and commit
-        id: create_branch
-        run: |
-          BRANCH_NAME="pdm/v${{ env.NEW_VERSION }}"
-          git checkout -b "$BRANCH_NAME"
-          git add -A
-          git commit -m "🔖 bump: version ${{ env.OLD_VERSION }} → ${{ env.NEW_VERSION }}"
-          git push origin "$BRANCH_NAME"
-          echo "::set-output name=branch::$BRANCH_NAME"
-
-      - name: 📋 Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "🔖 bump: version ${{ env.OLD_VERSION }} → ${{ env.NEW_VERSION }}"
-          branch: ${{ steps.create_branch.outputs.branch }}
-          title: "🔖 Version Bump: v${{ env.NEW_VERSION }}"
-          body: |
-            ## Version Bump: `${{ env.OLD_VERSION }}` → `${{ env.NEW_VERSION }}`
-
-            This PR contains a version bump commit using `pdm bump ${{ inputs.version_type }}`.
-
-            Please review and merge.
-          base: main
-          delete-branch: false
+  trigger_release:
+    needs: bump
+    uses: ./.github/workflows/release.yml
+  
+  trigger_publish:
+    needs: bump
+    uses: ./.github/workflows/publish.yml

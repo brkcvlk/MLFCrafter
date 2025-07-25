@@ -1,53 +1,64 @@
-name: 🚀 Release on PR Merge
+name: 📦 Publish to PyPI
 
 on:
-  pull_request:
-    types: [closed]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
-  release:
-    if: github.event.pull_request.merged == true
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🛒 Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          pip install twine setuptools wheel
+      - name: Install PDM
+        run: pip install pdm
 
-      - name: Get version from pyproject.toml
-        id: get_version
-        run: |
-          VERSION=$(pdm show --version)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: Build with PDM
+        run: pdm build
 
-      - name: Create Git Tag
+      - name: Publish to PyPI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v${{ steps.get_version.outputs.VERSION }}" -m "Release v${{ steps.get_version.outputs.VERSION }}"
-          git push origin "v${{ steps.get_version.outputs.VERSION }}"
+          PDM_PUBLISH_USERNAME: __token__
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: pdm publish
+name: 📦 Publish to PyPI
 
-      - name: Generate Release Notes
-        id: release_notes
-        run: |
-          gh release create "v${{ steps.get_version.outputs.VERSION }}" \
-            --notes "Auto-generated release for version v${{ steps.get_version.outputs.VERSION }}."
+on:
+  workflow_dispatch:
+  workflow_call:
 
-      - name: Build and Publish to PyPI
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PDM
+        run: pip install pdm
+
+      - name: Build with PDM
+        run: pdm build
+
+      - name: Publish to PyPI
         env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python -m build
-          twine upload dist/*
-
+          PDM_PUBLISH_USERNAME: __token__
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: pdm publish
