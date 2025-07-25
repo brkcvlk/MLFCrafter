@@ -18,6 +18,7 @@ import pytest
 from sklearn.datasets import load_breast_cancer, load_iris, load_wine
 
 from mlfcrafter import (
+    CategoricalCrafter,
     CleanerCrafter,
     DataIngestCrafter,
     DeployCrafter,
@@ -25,7 +26,6 @@ from mlfcrafter import (
     ModelCrafter,
     ScalerCrafter,
     ScorerCrafter,
-    CategoricalCrafter
 )
 
 
@@ -160,6 +160,7 @@ class TestScalerCrafter(TestDatasets):
         assert "scaler" in result
         assert result["scaler_type"] == "minmax"
 
+
 class TestCategoricalCrafter(TestDatasets):
     """Test suite for CategoricalCrafter"""
 
@@ -173,9 +174,10 @@ class TestCategoricalCrafter(TestDatasets):
         result = crafter.run(context)
 
         encoded_data = result["data"]
-        assert set(["target_0", "target_1"]).issubset(encoded_data.columns)  # Check one-hot columns
+        assert {"target_0", "target_1"}.issubset(encoded_data.columns)  # Check one-hot columns
         assert "target" not in encoded_data.columns  # Original target should be removed
-        assert len(result["encoded_columns"]) > 0  # At least one column should be encoded
+        assert (len(result["encoded_columns"]) > 0)  # At least one column should be encoded
+
     def test_label_encoding(self, iris_dataset):
         """Test label encoding of categorical columns"""
         # Convert target to categorical for testing
@@ -187,7 +189,8 @@ class TestCategoricalCrafter(TestDatasets):
 
         encoded_data = result["data"]
         assert "target" in encoded_data.columns  # Target should be label-encoded
-        assert len(result["encoded_columns"]) > 0  # At least one column should be encoded
+        assert (len(result["encoded_columns"]) > 0)  # At least one column should be encoded
+
 
 class TestModelCrafter(TestDatasets):
     """Test suite for ModelCrafter"""

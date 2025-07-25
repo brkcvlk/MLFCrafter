@@ -1,10 +1,13 @@
-import logging 
-
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+import logging
 from typing import List, Optional
+
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
 # Setup logger for this crafter
 logger = logging.getLogger("mlfcrafter.CategoricalCrafter")
+
+
 class CategoricalCrafter:
     """
     Data Categorical Crafter for encoding categorical features.
@@ -51,23 +54,25 @@ class CategoricalCrafter:
     Important Notes:
         - Only categorical columns are encoded
     """
-    
-    def __init__(self, encoder_type: str = "onehot", columns: Optional[List[str]] = None):
+
+    def __init__(
+        self, encoder_type: str = "onehot", columns: Optional[List[str]] = None
+    ):
         self.encoder_type = encoder_type.lower()
         self.columns = columns if columns is not None else []
-    
+
     def run(self, context: dict) -> dict:
         """
         Run the categorical encoding process and update the context.
-        
+
         Args:
             context (dict): Pipeline context containing 'data' key with DataFrame.
-        
+
         Returns:
             dict: Updated context with encoded data and encoder metadata.
         """
         logger.info("Starting categorical encoding...")
-        
+
         # Extract data from context
         if "data" not in context:
             logger.error("No data found in context")
@@ -78,7 +83,9 @@ class CategoricalCrafter:
 
         if not self.columns:
             # Auto-select categorical columns if none specified
-            self.columns = df_encoded.select_dtypes(include=['object', 'category']).columns.tolist()
+            self.columns = df_encoded.select_dtypes(
+                include=["object", "category"]
+            ).columns.tolist()
         logger.info(f"Columns to encode: {self.columns}")
         if not self.columns:
             # If no columns to encode, skip encoding
@@ -102,7 +109,7 @@ class CategoricalCrafter:
             encoded_df = pd.DataFrame(
                 encoded_array,
                 columns=encoder.get_feature_names_out(self.columns),
-                index=df_encoded.index
+                index=df_encoded.index,
             )
             df_encoded = df_encoded.drop(columns=self.columns)
             # Concatenate the original DataFrame with the encoded DataFrame
@@ -115,22 +122,17 @@ class CategoricalCrafter:
         context["encoded_columns"] = self.columns
         context["encoder_type"] = self.encoder_type
 
-
         logger.info("Data encoding completed successfully")
         return context
-    
+
     def _get_encoder(self):
         """Initialize the appropriate encoder based on encoder_type."""
 
         if self.encoder_type == "onehot":
             # OneHotEncoder with sparse output disabled for easier DataFrame handling
-            return OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+            return OneHotEncoder(sparse_output=False, handle_unknown="ignore")
         elif self.encoder_type == "label":
             # LabelEncoder does not require fitting on the entire DataFrame
             return LabelEncoder()
         else:
             raise ValueError(f"Unsupported encoding type: {self.encoder_type}")
-        
-        
-    
-        

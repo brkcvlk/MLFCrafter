@@ -1,9 +1,9 @@
 from .crafters import (
+    CategoricalCrafter,
     CleanerCrafter,
     DataIngestCrafter,
     DeployCrafter,
     ModelCrafter,
-    CategoricalCrafter,
     ScalerCrafter,
     ScorerCrafter,
 )
