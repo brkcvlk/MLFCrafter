@@ -174,9 +174,13 @@ class TestCategoricalCrafter(TestDatasets):
         result = crafter.run(context)
 
         encoded_data = result["data"]
-        assert {"target_0", "target_1"}.issubset(encoded_data.columns)  # Check one-hot columns
+        assert {"target_0", "target_1"}.issubset(
+            encoded_data.columns
+        )  # Check one-hot columns
         assert "target" not in encoded_data.columns  # Original target should be removed
-        assert (len(result["encoded_columns"]) > 0)  # At least one column should be encoded
+        assert (
+            len(result["encoded_columns"]) > 0
+        )  # At least one column should be encoded
 
     def test_label_encoding(self, iris_dataset):
         """Test label encoding of categorical columns"""
@@ -189,7 +193,9 @@ class TestCategoricalCrafter(TestDatasets):
 
         encoded_data = result["data"]
         assert "target" in encoded_data.columns  # Target should be label-encoded
-        assert (len(result["encoded_columns"]) > 0)  # At least one column should be encoded
+        assert (
+            len(result["encoded_columns"]) > 0
+        )  # At least one column should be encoded
 
 
 class TestModelCrafter(TestDatasets):
