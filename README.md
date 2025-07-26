@@ -1,4 +1,6 @@
-# MLFCrafter
+<p align="center">
+  <a href="https://github.com/brkcvlk/MLFCrafter"><img src="docs/logo.png" alt="MLFCrafter" style="height:400"></a>
+</p>
 
 > **ML Pipeline Automation Framework - Chain together data processing, model training, and deployment with minimal code**
 
