@@ -26,7 +26,7 @@ Your support helps us continue developing and improving MLFCrafter for the ML co
 
 MLFCrafter is a Python framework that simplifies machine learning pipeline creation through chainable "crafter" components. Build, train, and deploy ML models with minimal code and maximum flexibility.
 
-## Key Features
+### Key Features
 
 - **🔗 Chainable Architecture** - Connect multiple processing steps seamlessly
 - **📊 Smart Data Handling** - Automatic data ingestion from CSV, Excel, JSON
@@ -36,6 +36,31 @@ MLFCrafter is a Python framework that simplifies machine learning pipeline creat
 - **📈 Comprehensive Metrics** - Accuracy, Precision, Recall, F1-Score
 - **💾 Easy Deployment** - One-click model saving with metadata
 - **🔄 Context-Based** - Seamless data flow between pipeline steps
+
+
+## Why MLFCrafter?
+
+Writing the same ML boilerplate again and again is exhausting — especially when juggling multiple datasets or experimenting with different models. MLFCrafter was created to solve exactly that.
+
+Here’s why MLFCrafter might be the right tool for you:
+
+✅ **Automation without Black Box**: You automate repetitive steps, but still keep visibility and control over each stage.
+
+✅ **Modular by Design**: You can run only the steps you need. Don't want automatic data cleaning ? Just skip `CleanerCrafter` and plug in your own function.
+
+✅ **Readable & Reusable**: The API is simple, clean, and built for easy experimentation and reproducibility.
+
+✅ **Scikit-learn Compatible**: Use your favorite tools and estimators within the pipeline.
+
+✅ **Open for Extension**: You can build your own custom crafters if needed.
+
+✅ **Easy to Learn**: MLFCrafter’s intuitive API and clear component structure make it approachable even for users with basic machine learning knowledge. You don’t need to dive deep into complex frameworks to start building.
+
+---
+
+## Documentation
+
+Complete documentation is available at [MLFCrafter Docs](https://brkcvlk.github.io/mlfcrafter/)
 
 ## Quick Start
 
@@ -63,103 +88,6 @@ chain = MLFChain(
 # Run entire pipeline
 results = chain.run(target_column="species")
 print(f"Test Score: {results['test_score']:.4f}")
-```
-
-### Advanced Configuration
-
-```python
-chain = MLFChain(
-    DataIngestCrafter(data_path="data/titanic.csv", source_type="csv"),
-    CleanerCrafter(strategy="mean", str_fill="Unknown"),
-    ScalerCrafter(scaler_type="minmax", columns=["age", "fare"]),
-    ModelCrafter(
-        model_name="xgboost",
-        model_params={"n_estimators": 200, "max_depth": 6},
-        test_size=0.25
-    ),
-    ScorerCrafter(),
-    DeployCrafter(model_path="models/titanic_model.joblib")
-)
-
-results = chain.run(target_column="survived")
-```
-
-## Components (Crafters)
-
-### DataIngestCrafter
-Loads data from various file formats:
-```python
-DataIngestCrafter(
-    data_path="path/to/data.csv",
-    source_type="auto"  # auto, csv, excel, json
-)
-```
-
-### CleanerCrafter  
-Handles missing values intelligently:
-```python
-CleanerCrafter(
-    strategy="auto",    # auto, mean, median, mode, drop, constant
-    str_fill="missing", # Fill value for strings
-    int_fill=0.0       # Fill value for numbers
-)
-```
-
-### ScalerCrafter
-Scales numerical features:
-```python
-ScalerCrafter(
-    scaler_type="standard",  # standard, minmax, robust
-    columns=["age", "income"]  # Specific columns or None for all numeric
-)
-```
-
-### ModelCrafter
-Trains ML models:
-```python
-ModelCrafter(
-    model_name="random_forest",  # random_forest, xgboost, logistic_regression
-    model_params={"n_estimators": 100},
-    test_size=0.2,
-    stratify=True
-)
-```
-
-### ScorerCrafter
-Calculates performance metrics:
-```python
-ScorerCrafter(
-    metrics=["accuracy", "precision", "recall", "f1"]  # Default: all metrics
-)
-```
-
-### DeployCrafter
-Saves trained models:
-```python
-DeployCrafter(
-    model_path="model.joblib",
-    save_format="joblib",  # joblib or pickle
-    include_scaler=True,
-    include_metadata=True
-)
-```
-
-## Alternative Usage Patterns
-
-### Step-by-Step Building
-```python
-chain = MLFChain()
-chain.add_crafter(DataIngestCrafter(data_path="data.csv"))
-chain.add_crafter(CleanerCrafter(strategy="median"))
-chain.add_crafter(ModelCrafter(model_name="xgboost"))
-results = chain.run(target_column="target")
-```
-
-### Loading Saved Models
-```python
-artifacts = DeployCrafter.load_model("model.joblib")
-model = artifacts["model"]
-metadata = artifacts["metadata"]
 ```
 
 ## Requirements
@@ -203,9 +131,6 @@ ruff format .
 python example.py
 ```
 
-## Documentation
-
-Complete documentation is available at [MLFCrafter Docs](https://brkcvlk.github.io/mlfcrafter/)
 
 ## Contributing
 
