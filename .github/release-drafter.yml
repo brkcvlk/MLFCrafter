@@ -2,21 +2,29 @@ name-template: 'v$NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 
 categories:
-  - title: "🚀 Features"
+  - title: '🚀 Features'
     labels:
-      - "feat"
-  - title: "🐛 Bug Fixes"
+      - 'feature'
+  - title: '🐛 Bug Fixes'
     labels:
-      - "fix"
-  - title: "🧰 Maintenance"
+      - 'bug'
+  - title: '🧰 Maintenance'
     labels:
-      - "chore"
-  - title: "📝 Documentation"
+      - 'chore'
+  - title: '📚 Documentation'
     labels:
-      - "docs"
+      - 'docs'
+
+change-template: '- $TITLE (#$NUMBER) by @$AUTHOR'
+no-changes-template: '- No changes'
 
 template: |
-  ## Changes
+  ## What’s Changed
+
   $CHANGES
-change-template: '- $TITLE (#$NUMBER)'
-no-changes-template: 'No significant changes.'
+
+  ---
+
+  $RELEASE_NOTES
+  ## Contributors
+  $CONTRIBUTORS
