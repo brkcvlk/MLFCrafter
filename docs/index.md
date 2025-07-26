@@ -1,7 +1,9 @@
 <div align="center">
-  <a href="https://brkcvlk.github.io/MLFCrafter"><img src="logo.png" alt="MLFCrafter" style="height:400"></a>
-  <h2>🚀 ML Pipeline Automation Framework</h2>
-  <p>Build, train, and deploy machine learning models with minimal code through chainable "crafter" components.</p>
+    <h1 style="font-size: 3.5em; margin: 0.5em 0;">
+        MLFCrafter
+    </h1>
+    <h2>🚀 ML Pipeline Automation Framework</h2>
+    <p>Build, train, and deploy machine learning models with minimal code through chainable "crafter" components.</p>
 </div>
 
 ---
