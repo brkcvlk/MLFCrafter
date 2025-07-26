@@ -1,40 +1,19 @@
-name: 🚀 Release on Tag
+name: 🚧 Release Drafter
 
 on:
   push:
     branches:
       - main
-    tags:
-      - 'v*.*.*'  # sadece semver etiketlerinde tetiklenir (örn: v0.1.1)
+  pull_request:
+    types: [closed]
 
 jobs:
-  release:
+  update_release_draft:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Draft Release Notes
-        uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: 'Release ${{ github.ref_name }}'
-          body: |
-            ## Release Notes
-            ${{ steps.release-drafter.outputs.release_notes }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
