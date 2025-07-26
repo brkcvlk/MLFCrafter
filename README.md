@@ -1,6 +1,6 @@
-<p align="center" style="font-size: 3.5em; margin: 0.5em 0;">
+<h1 align="center" >
     MLFCrafter
-</p>
+</h1>
 
 > **ML Pipeline Automation Framework - Chain together data processing, model training, and deployment with minimal code**
 
