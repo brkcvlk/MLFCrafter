@@ -7,8 +7,7 @@
 [![Tests](https://github.com/brkcvlk/mlfcrafter/workflows/🧪%20Tests%20&%20Code%20Quality/badge.svg)](https://github.com/brkcvlk/mlfcrafter/actions)
 [![Documentation](https://github.com/brkcvlk/mlfcrafter/workflows/📚%20Deploy%20Documentation/badge.svg)](https://brkcvlk.github.io/mlfcrafter/)
 [![License](https://img.shields.io/github/license/brkcvlk/mlfcrafter?color=green)](LICENSE)
-[![Downloads](https://img.shields.io/pypi/dm/mlfcrafter?color=brightgreen)](https://pypi.org/project/mlfcrafter/)
-
+[![PyPI Downloads](https://static.pepy.tech/badge/mlfcrafter)](https://pepy.tech/projects/mlfcrafter)
 ---
 
 ## ⭐ **If you find MLFCrafter useful, please consider starring this repository!**
