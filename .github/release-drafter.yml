@@ -2,21 +2,49 @@ name-template: 'v$NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 
 categories:
-  - title: "🚀 Features"
+  - title: '🚀 Features'
     labels:
-      - "feat"
-  - title: "🐛 Bug Fixes"
+      - 'feat:*'
+  - title: '🐛 Bug Fixes'
     labels:
-      - "fix"
-  - title: "🧰 Maintenance"
+      - 'fix:*'
+  - title: '🧰 Maintenance'
     labels:
-      - "chore"
-  - title: "📝 Documentation"
+      - 'chore:*'
+  - title: '📝 Documentation'
     labels:
-      - "docs"
+      - 'docs:*'
+  - title: '🔧 Refactor'
+    labels:
+      - 'refactor:*'
+  - title: '🎨 Style'
+    labels:
+      - 'style:*'
+  - title: '🧪 Tests'
+    labels:
+      - 'test:*'
+
+change-template: '- $TITLE (#$NUMBER) by @$AUTHOR'
+no-changes-template: '- No changes'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+
 
 template: |
-  ## Changes
+  ## What’s Changed
+
   $CHANGES
-change-template: '- $TITLE (#$NUMBER)'
-no-changes-template: 'No significant changes.'
+
+  ---
+
+  ## Contributors
+  $CONTRIBUTORS
