@@ -252,17 +252,6 @@ if not result['deployment_successful']:
 - Use `"joblib"` for scikit-learn models (faster, optimized)
 - Use `"pickle"` for custom objects or compatibility needs
 
-### Organize Model Files
-Create clear directory structures:
-```
-models/
-├── dev/
-│   └── test_models/
-├── staging/
-│   └── validation_models/
-└── prod/
-    └── production_models/
-```
 
 ## Example: Production Deployment
 

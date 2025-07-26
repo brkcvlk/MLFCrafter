@@ -158,6 +158,5 @@ print(f"Model saved: {results['deployment_successful']}")
 ## What's Next?
 
 - Learn about [Pipeline Basics](../user-guide/pipeline-basics.md)
-- Explore [Data Processing](../user-guide/data-processing.md) techniques
 - Check out more [Examples](../examples/basic-usage.md)
 - Build [Your First Complete Pipeline](first-pipeline.md) 

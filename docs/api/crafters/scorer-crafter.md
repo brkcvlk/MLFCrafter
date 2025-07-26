@@ -61,9 +61,3 @@ pipeline.add_crafter(ScorerCrafter(metrics=["accuracy"]))
 result = pipeline.run()
 ```
 
-## Notes
-
-- Automatically detects binary vs multi-class classification
-- Uses "binary" averaging for binary classification
-- Uses "macro" averaging for multi-class classification
-- Handles edge cases and zero division warnings 

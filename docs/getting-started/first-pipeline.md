@@ -244,7 +244,6 @@ The pipeline returns a dictionary with these key components:
 
 ## Next Steps
 
-- Learn about [Data Processing](../user-guide/data-processing.md) techniques
 - Explore [Model Training](../user-guide/model-training.md) options  
 - Check out [Deployment](../user-guide/deployment.md) strategies
 - Try [Basic Usage Examples](../examples/basic-usage.md) 
