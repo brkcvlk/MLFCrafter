@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "mlfcrafter"
-version = "0.1.0"
+version = "0.1.1"
 description = "ML Pipeline Automation Framework - Chain together data processing, model training, and deployment with minimal code"
 readme = "README.md"
 license = {text = "MIT"}
