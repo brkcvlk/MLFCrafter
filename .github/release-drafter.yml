@@ -18,6 +18,18 @@ categories:
 change-template: '- $TITLE (#$NUMBER) by @$AUTHOR'
 no-changes-template: '- No changes'
 
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+
+
 template: |
   ## What’s Changed
 
