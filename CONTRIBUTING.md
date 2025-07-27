@@ -1,6 +1,6 @@
 # 🤝 Contributing to MLFCrafter
 
-Thank you for your interest in contributing to **MLFCrafter**! This document outlines how to contribute to our ML pipeline automation framework.
+Thank you for your interest in contributing to **MLFCrafter**! This document outlines how to contribute to our ML pipeline automation Tool.
 
 ## 🚀 **Quick Start**
 

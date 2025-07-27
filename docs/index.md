@@ -2,7 +2,7 @@
     <h1 style="font-size: 3.5em; margin: 0.5em 0;">
         MLFCrafter
     </h1>
-    <h2>🚀 ML Pipeline Automation Framework</h2>
+    <h2>🚀 ML Pipeline Automation Tool</h2>
     <p>Build, train, and deploy machine learning models with minimal code through chainable "crafter" components.</p>
 </div>
 
@@ -10,7 +10,7 @@
 
 ## What is MLFCrafter?
 
-**MLFCrafter** is a powerful Python framework that simplifies machine learning pipeline creation through a modular, chainable architecture. Instead of writing repetitive boilerplate code, you can compose sophisticated ML workflows by connecting specialized "crafters" together.
+**MLFCrafter** is a powerful Python Tool that simplifies machine learning pipeline creation through a modular, chainable architecture. Instead of writing repetitive boilerplate code, you can compose sophisticated ML workflows by connecting specialized "crafters" together.
 
 ```python
 from mlfcrafter import MLFChain, DataIngestCrafter, CleanerCrafter, ModelCrafter

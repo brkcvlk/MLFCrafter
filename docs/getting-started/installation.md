@@ -49,7 +49,7 @@ MLFCrafter automatically installs the following core dependencies:
 - **pandas** (>=2.0.0) - Data manipulation and analysis
 - **scikit-learn** (>=1.3.0) - Machine learning library
 - **numpy** (>=1.24.0) - Numerical computing
-- **xgboost** (>=2.0.0) - Gradient boosting framework
+- **xgboost** (>=2.0.0) - Gradient boosting Tool
 - **joblib** (>=1.2.0) - Lightweight pipelining
 
 ## Optional Dependencies

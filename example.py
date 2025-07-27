@@ -2,7 +2,7 @@
 MLFCrafter Usage Examples
 =========================
 
-This file demonstrates various ways to use MLFCrafter framework for ML pipeline automation.
+This file demonstrates various ways to use MLFCrafter Tool for ML pipeline automation.
 Run different examples by uncommenting the desired section.
 """
 
