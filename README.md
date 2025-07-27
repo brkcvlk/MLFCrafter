@@ -60,8 +60,10 @@ Here’s why MLFCrafter might be the right tool for you:
 
 ## Documentation
 
-Complete documentation is available at [MLFCrafter Docs](https://brkcvlk.github.io/MLFCrafter/)
-
+- Complete documentation is available -> [MLFCrafter Docs](https://brkcvlk.github.io/MLFCrafter/)
+- Create your first Pipeline -> [Your First Pipeline](https://brkcvlk.github.io/MLFCrafter/getting-started/first-pipeline/)
+- Start learning How Crafters work -> [Crafters](https://brkcvlk.github.io/MLFCrafter/api/crafters/data-ingest-crafter/)
+- Do you want to see example usage, Check -> [Example](https://brkcvlk.github.io/MLFCrafter/examples/basic-usage/)
 ## Quick Start
 
 ### Installation
