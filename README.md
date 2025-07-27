@@ -60,7 +60,7 @@ Here’s why MLFCrafter might be the right tool for you:
 
 ## Documentation
 
-Complete documentation is available at [MLFCrafter Docs](https://brkcvlk.github.io/mlfcrafter/)
+Complete documentation is available at [MLFCrafter Docs](https://brkcvlk.github.io/MLFCrafter/)
 
 ## Quick Start
 
