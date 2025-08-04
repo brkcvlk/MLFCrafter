@@ -43,7 +43,7 @@ jobs:
         pip install mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin
         
     - name: 🔧 Setup Pages
-      uses: actions/configure-pages@v4
+      uses: actions/configure-pages@v5
       
     - name: 🏗️ Build documentation
       run: |
@@ -101,7 +101,7 @@ jobs:
         mkdocs build --clean --strict
         
     - name: 🔗 Check links
-      uses: lycheeverse/lychee-action@v1
+      uses: lycheeverse/lychee-action@v2
       with:
         args: --verbose --no-progress 'site/**/*.html'
       env:
