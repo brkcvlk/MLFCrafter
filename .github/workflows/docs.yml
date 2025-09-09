@@ -26,7 +26,7 @@ jobs:
     
     steps:
     - name: 🛒 Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0  # Full history for git-revision-date-localized plugin
         
@@ -81,7 +81,7 @@ jobs:
     
     steps:
     - name: 🛒 Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
